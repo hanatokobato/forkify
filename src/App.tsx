@@ -1,10 +1,15 @@
 import React from 'react';
-import './App.css';
+import Header from './components/Header';
+import Recipe from './components/Recipe';
+import SearchResults from './components/SearchResults';
 
 function App() {
   return (
-    <div>
-    </div>
+    <>
+      <Header />
+      <SearchResults />
+      <Recipe />
+    </>
   );
 }
 
