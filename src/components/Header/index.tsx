@@ -1,8 +1,9 @@
 import React from 'react';
+import logo from '../../images/logo.png';
 
 function Header() {
   return <header className="header">
-    <img src="logo.png" alt="Logo" className="header__logo" />
+    <img src={logo} alt="Logo" className="header__logo" />
     <form className="search">
       <input
         type="text"
