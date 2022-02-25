@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import icons from '../../images/icons.svg';
 import useHttp from '../../hooks/useHttp';
+import { API_URL } from '../../consts';
 
-interface Recipe {
+export interface RecipeData {
   id: number;
   title: string;
   publisher: string;
@@ -14,13 +15,13 @@ interface Recipe {
 }
 
 function Recipe() {
-  const [recipe, setRecipe] = useState<Recipe>();
+  const [recipe, setRecipe] = useState<RecipeData>();
   const { isLoading, error, sendRequest: fetchRecipe } = useHttp();
 
   useEffect(() => {
     const formatRecipe = (data: any) => {
       const { recipe: fetchedRecipe } = data.data;
-      const fomattedRecipe: Recipe = {
+      const fomattedRecipe: RecipeData = {
         id: fetchedRecipe.id,
         title: fetchedRecipe.title,
         publisher: fetchedRecipe.publisher,
@@ -35,8 +36,7 @@ function Recipe() {
 
     fetchRecipe(
       {
-        url:
-          'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886',
+        url: `${API_URL}/5ed6604591c37cdc054bc886`,
       },
       formatRecipe
     );
@@ -70,7 +70,7 @@ function Recipe() {
               <use xlinkHref={`${icons}#icon-alert-triangle`}></use>
             </svg>
           </div>
-          <p>No recipes found for your query. Please try again!</p>
+          <p>{error}</p>
         </div>
       )}
 
@@ -138,7 +138,7 @@ function Recipe() {
                   </svg>
                   <div className="recipe__quantity">{ingredient.quantity}</div>
                   <div className="recipe__description">
-                    <span className="recipe__unit">{ingredient.unit}</span>
+                    <span className="recipe__unit">{`${ingredient.unit} `}</span>
                     {ingredient.description}
                   </div>
                 </li>
@@ -156,6 +156,7 @@ function Recipe() {
               className="btn--small recipe__btn"
               href={recipe.sourceUrl}
               target="_blank"
+              rel="noreferrer"
             >
               <span>Directions</span>
               <svg className="search__icon">
