@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import SearchContext, { RecipeListItem } from '../../context/SearchContext';
 import icons from '../../images/icons.svg';
 
@@ -29,9 +30,13 @@ function SearchResults() {
     setPage((oldPage) => (oldPage > 1 ? oldPage - 1 : oldPage));
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [_recipeList]);
+
   return (
     <div className="search-results">
-      {!isLoading && (error || recipeList.length === 0) && (
+      {!isLoading && error && (
         <div className="error">
           <div>
             <svg>
@@ -55,9 +60,11 @@ function SearchResults() {
           <ul className="results">
             {recipeList.map((preview) => (
               <li className="preview" key={`preview:${preview.id}`}>
-                <a
-                  className="preview__link preview__link--active"
-                  href={`#${preview.id}`}
+                <NavLink
+                  to={`/recipes/${preview.id}`}
+                  className={({ isActive }) =>
+                    `preview__link ${isActive ? 'preview__link--active' : ''}`
+                  }
                 >
                   <figure className="preview__fig">
                     <img src={preview.image} alt={preview.title} />
@@ -71,7 +78,7 @@ function SearchResults() {
                       </svg>
                     </div>
                   </div>
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
