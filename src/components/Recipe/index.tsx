@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
 import useHttp from '../../hooks/useHttp';
 import { API_URL } from '../../consts';
+import { BookmarkContext } from '../../context/BookmarkContext';
+import { RecipeListItem } from '../../context/SearchContext';
 
 export interface RecipeData {
-  id: number;
+  id: string;
   title: string;
   publisher: string;
   sourceUrl: string;
   image: string;
   servings: number;
   cookingTime: string;
-  ingredients: { quantity: number; description: string; unit: string }[];
+  ingredients: { quantity: number | null; description: string; unit: string }[];
+  isBookmarked?: boolean;
 }
 
 function Recipe() {
   const [recipe, setRecipe] = useState<RecipeData>();
   const { isLoading, error, sendRequest: fetchRecipe } = useHttp();
+  const bookmarkCtx = useContext(BookmarkContext);
+  const params = useParams();
 
   useEffect(() => {
+    if (!params.id) return;
+
     const formatRecipe = (data: any) => {
       const { recipe: fetchedRecipe } = data.data;
       const fomattedRecipe: RecipeData = {
@@ -30,17 +38,57 @@ function Recipe() {
         servings: fetchedRecipe.servings,
         cookingTime: fetchedRecipe.cooking_time,
         ingredients: fetchedRecipe.ingredients,
+        isBookmarked: bookmarkCtx.bookmarks.some(
+          (item) => item.id === fetchedRecipe.id
+        ),
       };
       setRecipe(fomattedRecipe);
     };
 
     fetchRecipe(
       {
-        url: `${API_URL}/5ed6604591c37cdc054bc886`,
+        url: `${API_URL}/${params.id}`,
       },
       formatRecipe
     );
-  }, [fetchRecipe]);
+  }, [fetchRecipe, params.id, bookmarkCtx.bookmarks]);
+
+  const updateServingsHandler = (newValue: number) => {
+    newValue > 0 &&
+      setRecipe(
+        (lastestRecipe) =>
+          lastestRecipe && {
+            ...lastestRecipe,
+            servings: newValue,
+            ingredients: lastestRecipe.ingredients.map((ingredient) => ({
+              ...ingredient,
+              quantity: ingredient.quantity
+                ? (ingredient.quantity * newValue) / lastestRecipe.servings
+                : null,
+            })),
+          }
+      );
+  };
+
+  const bookmarkHandler = () => {
+    if (!recipe!.isBookmarked) {
+      const bookmarkAttr = (({ id, title, publisher, image }: RecipeData) => ({
+        id,
+        title,
+        publisher,
+        image,
+      }))(recipe!);
+      bookmarkCtx.addBookmark(bookmarkAttr);
+      setRecipe(
+        (oldRecipe) => oldRecipe && { ...oldRecipe, isBookmarked: true }
+      );
+    } else {
+      bookmarkCtx.removeBookmark(recipe!.id);
+      setRecipe(
+        (oldRecipe) => oldRecipe && { ...oldRecipe, isBookmarked: false }
+      );
+    }
+  };
 
   return (
     <div className="recipe">
@@ -105,12 +153,18 @@ function Recipe() {
               </span>
               <span className="recipe__info-text">servings</span>
               <div className="recipe__info-buttons">
-                <button className="btn--tiny btn--increase-servings">
+                <button
+                  className="btn--tiny btn--increase-servings"
+                  onClick={() => updateServingsHandler(recipe.servings - 1)}
+                >
                   <svg>
                     <use xlinkHref={`${icons}#icon-minus-circle`}></use>
                   </svg>
                 </button>
-                <button className="btn--tiny btn--increase-servings">
+                <button
+                  className="btn--tiny btn--increase-servings"
+                  onClick={() => updateServingsHandler(recipe.servings + 1)}
+                >
                   <svg>
                     <use xlinkHref={`${icons}#icon-plus-circle`}></use>
                   </svg>
@@ -122,9 +176,13 @@ function Recipe() {
                 <use xlinkHref={`${icons}#icon-user`}></use>
               </svg>
             </div>
-            <button className="btn--round">
+            <button className="btn--round" onClick={bookmarkHandler}>
               <svg className="">
-                <use xlinkHref={`${icons}#icon-bookmark-fill`}></use>
+                <use
+                  xlinkHref={`${icons}#icon-bookmark${
+                    recipe.isBookmarked ? '-fill' : ''
+                  }`}
+                ></use>
               </svg>
             </button>
           </div>
