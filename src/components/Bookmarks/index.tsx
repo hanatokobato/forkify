@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { API_KEY } from '../../consts';
 import { BookmarkContext } from '../../context/BookmarkContext';
+import icons from '../../images/icons.svg';
 
 const Bookmarks = () => {
   const bookmarkCtx = useContext(BookmarkContext);
@@ -38,6 +40,15 @@ const Bookmarks = () => {
                 <p className="preview__publisher">
                   {bookmarkedRecipe.publisher}
                 </p>
+                <div
+                  className={`preview__user-generated ${
+                    bookmarkedRecipe.key === API_KEY ? '' : 'hidden'
+                  }`}
+                >
+                  <svg>
+                    <use href={`${icons}#icon-user`}></use>
+                  </svg>
+                </div>
               </div>
             </NavLink>
           </li>

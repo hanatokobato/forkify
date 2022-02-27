@@ -9,7 +9,7 @@ interface RequestConfig {
 
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string>();
 
   const sendRequest = useCallback(
     async (requestConfig: RequestConfig, applyData: (data: any) => void) => {
@@ -25,7 +25,7 @@ const useHttp = () => {
         if (!res.ok) throw new Error(`${data.message} (${res.status})`);
 
         applyData(data);
-        setError(null);
+        setError(undefined);
       } catch (e: any) {
         setError(e.message || 'Something went wrong!');
       }
