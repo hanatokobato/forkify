@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { API_KEY } from '../../consts';
 import SearchContext, { RecipeListItem } from '../../context/SearchContext';
 import icons from '../../images/icons.svg';
 
@@ -72,7 +73,11 @@ function SearchResults() {
                   <div className="preview__data">
                     <h4 className="preview__title">{preview.title}</h4>
                     <p className="preview__publisher">{preview.publisher}</p>
-                    <div className="preview__user-generated">
+                    <div
+                      className={`preview__user-generated ${
+                        preview.key === API_KEY ? '' : 'hidden'
+                      }`}
+                    >
                       <svg>
                         <use href={`${icons}#icon-user`}></use>
                       </svg>

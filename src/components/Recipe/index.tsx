@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
 import useHttp from '../../hooks/useHttp';
-import { API_URL } from '../../consts';
+import { API_KEY, API_URL } from '../../consts';
 import { BookmarkContext } from '../../context/BookmarkContext';
 import { RecipeListItem } from '../../context/SearchContext';
 
@@ -16,6 +16,7 @@ export interface RecipeData {
   cookingTime: string;
   ingredients: { quantity: number | null; description: string; unit: string }[];
   isBookmarked?: boolean;
+  key?: string;
 }
 
 function Recipe() {
@@ -23,6 +24,18 @@ function Recipe() {
   const { isLoading, error, sendRequest: fetchRecipe } = useHttp();
   const bookmarkCtx = useContext(BookmarkContext);
   const params = useParams();
+
+  useEffect(() => {
+    setRecipe(
+      (currentRecipe) =>
+        currentRecipe && {
+          ...currentRecipe,
+          isBookmarked: bookmarkCtx.bookmarks.some(
+            (item) => item.id === currentRecipe.id
+          ),
+        }
+    );
+  }, [bookmarkCtx.bookmarks]);
 
   useEffect(() => {
     if (!params.id) return;
@@ -41,6 +54,7 @@ function Recipe() {
         isBookmarked: bookmarkCtx.bookmarks.some(
           (item) => item.id === fetchedRecipe.id
         ),
+        key: fetchedRecipe.key,
       };
       setRecipe(fomattedRecipe);
     };
@@ -51,7 +65,7 @@ function Recipe() {
       },
       formatRecipe
     );
-  }, [fetchRecipe, params.id, bookmarkCtx.bookmarks]);
+  }, [fetchRecipe, params.id]);
 
   const updateServingsHandler = (newValue: number) => {
     newValue > 0 &&
@@ -72,11 +86,18 @@ function Recipe() {
 
   const bookmarkHandler = () => {
     if (!recipe!.isBookmarked) {
-      const bookmarkAttr = (({ id, title, publisher, image }: RecipeData) => ({
+      const bookmarkAttr = (({
         id,
         title,
         publisher,
         image,
+        key,
+      }: RecipeData) => ({
+        id,
+        title,
+        publisher,
+        image,
+        key,
       }))(recipe!);
       bookmarkCtx.addBookmark(bookmarkAttr);
       setRecipe(
@@ -171,7 +192,11 @@ function Recipe() {
                 </button>
               </div>
             </div>
-            <div className="recipe__user-generated">
+            <div
+              className={`recipe__user-generated ${
+                recipe.key === API_KEY ? '' : 'hidden'
+              }`}
+            >
               <svg>
                 <use xlinkHref={`${icons}#icon-user`}></use>
               </svg>

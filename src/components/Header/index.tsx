@@ -2,8 +2,13 @@ import React from 'react';
 import logo from '../../images/logo.png';
 import Bookmarks from '../Bookmarks';
 import Search from '../Search';
+import icons from '../../images/icons.svg';
 
-function Header() {
+function Header({
+  openNewRecipeHandler,
+}: {
+  openNewRecipeHandler: () => void;
+}) {
   return (
     <header className="header">
       <img src={logo} alt="Logo" className="header__logo" />
@@ -12,9 +17,12 @@ function Header() {
       <nav className="nav">
         <ul className="nav__list">
           <li className="nav__item">
-            <button className="nav__btn nav__btn--add-recipe">
+            <button
+              className="nav__btn nav__btn--add-recipe"
+              onClick={openNewRecipeHandler}
+            >
               <svg className="nav__icon">
-                <use href="src/img/icons.svg#icon-edit"></use>
+                <use href={`${icons}#icon-edit`}></use>
               </svg>
               <span>Add recipe</span>
             </button>
@@ -22,7 +30,7 @@ function Header() {
           <li className="nav__item">
             <button className="nav__btn nav__btn--bookmarks">
               <svg className="nav__icon">
-                <use href="src/img/icons.svg#icon-bookmark"></use>
+                <use href={`${icons}#icon-bookmark`}></use>
               </svg>
               <span>Bookmarks</span>
             </button>
