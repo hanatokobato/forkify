@@ -1,0 +1,36 @@
+.container {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  justify-items: center;
+  align-items: center;
+  color: #f38e82;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.page,
+.previous,
+.next {
+  cursor: pointer;
+}
+
+.page {
+  background-color: #f9f5f3;
+  border-radius: 10rem;
+
+  a {
+    display: block;
+    padding: 0.8rem 1.2rem;
+  }
+
+  &:hover:not(.active) {
+    color: #f48982;
+    background-color: #f2efee;
+  }
+}
+
+.active {
+  background-color: #f38e82;
+  color: #f9f5f3;
+}

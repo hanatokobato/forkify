@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { API_KEY } from '../../consts';
 import SearchContext, { RecipeListItem } from '../../context/SearchContext';
 import icons from '../../images/icons.svg';
+import Paginate from '../Paginate';
 
 const PER_PAGE = 10;
 
@@ -12,23 +13,19 @@ const getSearchResultsPage = (results: RecipeListItem[], page: number) => {
   return results.slice(start, end);
 };
 
+const getPageCount = (results: RecipeListItem[]) => {
+  return Math.ceil(results.length / PER_PAGE);
+};
+
 function SearchResults() {
   const { recipeList: _recipeList, isLoading, error } = useContext(
     SearchContext
   );
   const [page, setPage] = useState<number>(1);
-  const maxPage =
-    _recipeList.length % PER_PAGE === 0
-      ? Math.floor(_recipeList.length / PER_PAGE)
-      : Math.floor(_recipeList.length / PER_PAGE) + 1;
   const recipeList = getSearchResultsPage(_recipeList, page);
 
-  const nextPageHandler = (_e: any) => {
-    setPage((oldPage) => (oldPage < maxPage ? oldPage + 1 : maxPage));
-  };
-
-  const prevPageHandler = (_e: any) => {
-    setPage((oldPage) => (oldPage > 1 ? oldPage - 1 : oldPage));
+  const handlePageClick = (e: any) => {
+    setPage(e.selected + 1);
   };
 
   useEffect(() => {
@@ -88,27 +85,17 @@ function SearchResults() {
             ))}
           </ul>
           <div className="pagination">
-            {page > 1 && (
-              <button
-                className="btn--inline pagination__btn--prev"
-                onClick={prevPageHandler}
-              >
-                <svg className="search__icon">
-                  <use href={`${icons}#icon-arrow-left`}></use>
-                </svg>
-                <span>{`Page ${page - 1}`}</span>
-              </button>
-            )}
-            {page < maxPage && (
-              <button
-                className="btn--inline pagination__btn--next"
-                onClick={nextPageHandler}
-              >
-                <span>{`Page ${page + 1}`}</span>
-                <svg className="search__icon">
-                  <use href={`${icons}#icon-arrow-right`}></use>
-                </svg>
-              </button>
+            {_recipeList.length > 0 && (
+              <Paginate
+                breakLabel="..."
+                nextLabel="next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={1}
+                marginPagesDisplayed={1}
+                pageCount={getPageCount(_recipeList)}
+                previousLabel="< previous"
+                renderOnZeroPageCount={undefined}
+              />
             )}
           </div>
         </>
