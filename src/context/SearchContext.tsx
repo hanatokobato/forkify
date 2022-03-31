@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { RecipeData } from '../components/Recipe';
-import { API_KEY, API_URL } from '../consts';
-import useHttp from '../hooks/useHttp';
+import { ApolloError, gql, useLazyQuery } from '@apollo/client';
 
 export type RecipeListItem = Pick<
   RecipeData,
@@ -12,7 +11,7 @@ interface SearchContext {
   fetchRecipes: (query: string) => void;
   recipeList: RecipeListItem[];
   isLoading: boolean;
-  error?: string;
+  error?: ApolloError;
 }
 
 const SearchContext = React.createContext<SearchContext>({
@@ -26,9 +25,24 @@ interface Props {
   children: ReactNode;
 }
 
+const RECIPES_QUERY = gql`
+  query getRecipes(
+    $searchQuery: String_comparison_exp!
+  ) {
+    recipes(
+      where: {title: $searchQuery}
+    ) {
+      id
+      title
+      publisher
+      image_url
+    }
+  }
+`;
+
 export const SearchContextProvider = ({ children }: Props) => {
   const [recipeList, setRecipeList] = useState<RecipeListItem[]>([]);
-  const { isLoading, error, sendRequest } = useHttp();
+  const [getRecipes, { loading: isLoading, error, data }] = useLazyQuery(RECIPES_QUERY);
 
   const fetchRecipes = useCallback(
     (query) => {
@@ -44,12 +58,9 @@ export const SearchContextProvider = ({ children }: Props) => {
         setRecipeList(formattedRecipes);
       };
 
-      sendRequest(
-        { url: `${API_URL}?search=${query}&key=${API_KEY}` },
-        formatResult
-      );
+      getRecipes({variables: {searchQuery: {_ilike: `%${query}%`}}}).then(formatResult);
     },
-    [sendRequest]
+    [getRecipes]
   );
 
   return (
