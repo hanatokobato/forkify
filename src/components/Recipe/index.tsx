@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
-import useHttp from '../../hooks/useHttp';
 import { API_KEY, API_URL } from '../../consts';
 import { BookmarkContext } from '../../context/BookmarkContext';
-import { RecipeListItem } from '../../context/SearchContext';
+import { ApolloError, gql, useLazyQuery } from '@apollo/client';
 
 export interface RecipeData {
   id: string;
@@ -19,9 +18,28 @@ export interface RecipeData {
   key?: string;
 }
 
+const RECIPE_QUERY = gql`
+  query getRecipe($id: bigint!) {
+    recipes_by_pk(id: $id) {
+      id
+      title
+      publisher
+      source_url
+      image_url
+      servings
+      cooking_time
+      ingredients {
+        quantity
+        description
+        unit
+      }
+    }
+  }
+`;
+
 function Recipe() {
   const [recipe, setRecipe] = useState<RecipeData>();
-  const { isLoading, error, sendRequest: fetchRecipe } = useHttp();
+  const [fetchRecipe, { loading: isLoading, error, data }] = useLazyQuery(RECIPE_QUERY);
   const bookmarkCtx = useContext(BookmarkContext);
   const params = useParams();
 
@@ -41,7 +59,7 @@ function Recipe() {
     if (!params.id) return;
 
     const formatRecipe = (data: any) => {
-      const { recipe: fetchedRecipe } = data.data;
+      const { recipes_by_pk: fetchedRecipe } = data.data;
       const fomattedRecipe: RecipeData = {
         id: fetchedRecipe.id,
         title: fetchedRecipe.title,
@@ -59,12 +77,7 @@ function Recipe() {
       setRecipe(fomattedRecipe);
     };
 
-    fetchRecipe(
-      {
-        url: `${API_URL}/${params.id}`,
-      },
-      formatRecipe
-    );
+    fetchRecipe({variables: {id: params.id}}).then(formatRecipe);
   }, [fetchRecipe, params.id]);
 
   const updateServingsHandler = (newValue: number) => {
