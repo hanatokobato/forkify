@@ -3,18 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-
-const client = new ApolloClient({
-  uri: 'http://localhost:8080/v1/graphql',
-  cache: new InMemoryCache(),
-});
+import { Auth0Provider } from '@auth0/auth0-react';
+import { AuthContextProvider } from './context/AuthContext';
+import ApolloWrapper from './components/ApolloWrapper';
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </ApolloProvider>,
+  <BrowserRouter>
+    <Auth0Provider
+      domain={process.env.REACT_APP_AUTH0_DOMAIN ?? ''}
+      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID ?? ''}
+      redirectUri={window.location.origin}
+      audience={process.env.REACT_APP_AUTH0_AUDIENCE ?? ''}
+    >
+      <AuthContextProvider>
+        <ApolloWrapper>
+          <App />
+        </ApolloWrapper>
+      </AuthContextProvider>
+    </Auth0Provider>
+  </BrowserRouter>,
   document.getElementById('root')
 );

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
-import { API_KEY, API_URL } from '../../consts';
+import { API_KEY } from '../../consts';
 import { BookmarkContext } from '../../context/BookmarkContext';
-import { ApolloError, gql, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
 
 export interface RecipeData {
   id: string;
@@ -39,7 +39,7 @@ const RECIPE_QUERY = gql`
 
 function Recipe() {
   const [recipe, setRecipe] = useState<RecipeData>();
-  const [fetchRecipe, { loading: isLoading, error, data }] = useLazyQuery(RECIPE_QUERY);
+  const [fetchRecipe, { loading: isLoading, error }] = useLazyQuery(RECIPE_QUERY);
   const bookmarkCtx = useContext(BookmarkContext);
   const params = useParams();
 

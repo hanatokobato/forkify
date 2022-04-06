@@ -3,6 +3,7 @@ import logo from '../../images/logo.png';
 import Bookmarks from '../Bookmarks';
 import Search from '../Search';
 import icons from '../../images/icons.svg';
+import LoginButton from '../LoginButton';
 
 function Header({
   openNewRecipeHandler,
@@ -35,6 +36,9 @@ function Header({
               <span>Bookmarks</span>
             </button>
             <Bookmarks />
+          </li>
+          <li className="nav__item">
+            <LoginButton className="nav__btn" />
           </li>
         </ul>
       </nav>
