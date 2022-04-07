@@ -41,7 +41,7 @@ function SearchResults() {
               <use xlinkHref={`${icons}#icon-alert-triangle`}></use>
             </svg>
           </div>
-          <p>{error || 'No recipes found!'}</p>
+          <p>{error.message || 'No recipes found!'}</p>
         </div>
       )}
 
