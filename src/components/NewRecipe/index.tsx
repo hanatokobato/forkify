@@ -1,99 +1,69 @@
-import React, { FormEventHandler, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { API_KEY, API_URL } from '../../consts';
-import useHttp from '../../hooks/useHttp';
 import icons from '../../images/icons.svg';
-import { useNavigate } from 'react-router-dom';
+import { To, useNavigate } from 'react-router-dom';
+import { Form, Field } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
+import { FieldArray } from 'react-final-form-arrays';
+import { ApolloError, gql, useMutation } from '@apollo/client';
+import classes from './index.module.scss';
 
-interface NewRecipe {
-  title?: string;
-  sourceUrl?: string;
-  image?: string;
-  publisher?: string;
-  cookingTime?: number;
-  servings?: number;
-  ingredients?: { [key: string]: string };
-}
-
-const Backdrop = ({ closeHandler }: { closeHandler: () => void }) => {
-  return <div className="overlay" onClick={closeHandler}></div>;
-};
-
-const ModalOverlay = ({ closeHandler }: { closeHandler: () => void }) => {
-  const [newRecipe, setNewRecipe] = useState<NewRecipe>({});
-  const { isLoading, error: apiError, sendRequest } = useHttp();
-  const [error, setError] = useState<string>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setError(apiError);
-  }, [apiError]);
-
-  const formDataChangeHandler = (e: any) => {
-    setNewRecipe((currentData) => {
-      let newIngredients = { ...currentData.ingredients };
-
-      if (e.target.name.startsWith('ingredient')) {
-        newIngredients[e.target.name] = e.target.value;
-      }
-
-      const newData = {
-        ...currentData,
-        [e.target.name.startsWith('ingredient')
-          ? 'ingredients'
-          : e.target.name]: e.target.name.startsWith('ingredient')
-          ? newIngredients
-          : e.target.value,
-      };
-      return newData;
-    });
+const Backdrop = ({ closeHandler }: { closeHandler: (path: To) => void }) => {
+  const clickHandler = () => {
+    closeHandler(-1 as To);
   };
 
-  const submitFormHandler: FormEventHandler = (e) => {
+  return <div className="overlay" onClick={clickHandler}></div>;
+};
+
+const CREATE_RECIPE = gql`
+  mutation MyMutation($recipe: recipes_insert_input!) {
+    insert_recipes_one(object: $recipe) {
+      id
+    }
+  }
+`;
+
+const ModalOverlay = ({
+  closeHandler,
+}: {
+  closeHandler: (path: To) => void;
+}) => {
+  const [error, setError] = useState<ApolloError>();
+  const navigate = useNavigate();
+  const required = (value: any) => (value ? undefined : 'Required');
+  const [addRecipe, { loading: isLoading, error: mutationError }] = useMutation(
+    CREATE_RECIPE
+  );
+
+  useEffect(() => {
+    setError(mutationError);
+  }, [mutationError]);
+
+  const submitFormHandler = async (values: any) => {
     try {
-      e.preventDefault();
-
-      const ingredients = Object.entries(newRecipe.ingredients || {}).map(
-        (ing) => {
-          const ingArr = ing[1].replaceAll(' ', '').split(',');
-          if (ingArr.length !== 3) throw new Error('Invalid ingredient!');
-
-          const [quantity, unit, description] = ingArr;
-          return { quantity: quantity ? +quantity : null, unit, description };
-        }
-      );
-
       const recipe = {
-        title: newRecipe.title,
-        source_url: newRecipe.sourceUrl,
-        image_url: newRecipe.image,
-        publisher: newRecipe.publisher,
-        cooking_time: +newRecipe!.cookingTime!,
-        servings: +newRecipe!.servings!,
-        ingredients: ingredients,
+        title: values.title,
+        source_url: values.sourceUrl,
+        image_url: values.image,
+        publisher: values.publisher,
+        cooking_time: values.cookingTime,
+        servings: values.servings,
+        ingredients: {
+          data: values.ingredients,
+        },
       };
 
-      sendRequest(
-        {
-          url: `${API_URL}?key=${API_KEY}`,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: recipe,
-        },
-        (data) => {
-          closeHandler();
-          navigate(`/recipes/${data.data.recipe.id}`);
-        }
-      );
+      const { data } = await addRecipe({ variables: { recipe: recipe } });
+
+      closeHandler(`/recipes/${data.insert_recipes_one.id}`);
     } catch (e: any) {
       setError(e.message || 'Something went wrong!');
     }
   };
 
   const closeModalHandler = () => {
-    closeHandler();
+    closeHandler(-1 as To);
   };
 
   return (
@@ -117,124 +87,170 @@ const ModalOverlay = ({ closeHandler }: { closeHandler: () => void }) => {
               <use xlinkHref={`${icons}#icon-alert-triangle`}></use>
             </svg>
           </div>
-          <p>{error}</p>
+          <p>{error.message}</p>
         </div>
       )}
 
       {!isLoading && !error && (
-        <form className="upload" onSubmit={submitFormHandler}>
-          <div className="upload__column">
-            <h3 className="upload__heading">Recipe data</h3>
-            <label>Title</label>
-            <input
-              value={newRecipe.title || ''}
-              required
-              name="title"
-              type="text"
-              onChange={formDataChangeHandler}
-            />
-            <label>URL</label>
-            <input
-              value={newRecipe.sourceUrl || ''}
-              required
-              name="sourceUrl"
-              type="text"
-              onChange={formDataChangeHandler}
-            />
-            <label>Image URL</label>
-            <input
-              value={newRecipe.image || ''}
-              required
-              name="image"
-              type="text"
-              onChange={formDataChangeHandler}
-            />
-            <label>Publisher</label>
-            <input
-              value={newRecipe.publisher || ''}
-              required
-              name="publisher"
-              type="text"
-              onChange={formDataChangeHandler}
-            />
-            <label>Prep time</label>
-            <input
-              value={newRecipe.cookingTime || ''}
-              required
-              name="cookingTime"
-              type="number"
-              onChange={formDataChangeHandler}
-            />
-            <label>Servings</label>
-            <input
-              value={newRecipe.servings || ''}
-              required
-              name="servings"
-              type="number"
-              onChange={formDataChangeHandler}
-            />
-          </div>
+        <Form
+          onSubmit={submitFormHandler}
+          mutators={{ ...arrayMutators }}
+          initialValues={{ ingredients: [{}] }}
+          render={({
+            handleSubmit,
+            form: {
+              mutators: { push },
+            },
+          }) => (
+            <form className="upload" onSubmit={handleSubmit}>
+              <div className="upload__column">
+                <h3 className="upload__heading">Recipe data</h3>
+                <Field name="title" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="upload__row">
+                      <label>Title</label>
+                      <input {...input} type="text" placeholder="Title" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
 
-          <div className="upload__column">
-            <h3 className="upload__heading">Ingredients</h3>
-            <label>Ingredient 1</label>
-            <input
-              value={newRecipe?.ingredients?.['ingredient-1'] || ''}
-              type="text"
-              required
-              name="ingredient-1"
-              placeholder="Format: 'Quantity,Unit,Description'"
-              onChange={formDataChangeHandler}
-            />
-            <label>Ingredient 2</label>
-            <input
-              value={newRecipe?.ingredients?.['ingredient-2'] || ''}
-              type="text"
-              name="ingredient-2"
-              placeholder="Format: 'Quantity,Unit,Description'"
-              onChange={formDataChangeHandler}
-            />
-            <label>Ingredient 3</label>
-            <input
-              value={newRecipe?.ingredients?.['ingredient-3'] || ''}
-              type="text"
-              name="ingredient-3"
-              placeholder="Format: 'Quantity,Unit,Description'"
-              onChange={formDataChangeHandler}
-            />
-            <label>Ingredient 4</label>
-            <input
-              type="text"
-              value={newRecipe?.ingredients?.['ingredient-4'] || ''}
-              name="ingredient-4"
-              placeholder="Format: 'Quantity,Unit,Description'"
-              onChange={formDataChangeHandler}
-            />
-            <label>Ingredient 5</label>
-            <input
-              type="text"
-              value={newRecipe?.ingredients?.['ingredient-5'] || ''}
-              name="ingredient-5"
-              placeholder="Format: 'Quantity,Unit,Description'"
-              onChange={formDataChangeHandler}
-            />
-            <label>Ingredient 6</label>
-            <input
-              type="text"
-              value={newRecipe?.ingredients?.['ingredient-6'] || ''}
-              name="ingredient-6"
-              placeholder="Format: 'Quantity,Unit,Description'"
-              onChange={formDataChangeHandler}
-            />
-          </div>
+                <Field name="sourceUrl" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="upload__row">
+                      <label>URL</label>
+                      <input {...input} type="text" placeholder="URL" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
 
-          <button className="btn upload__btn">
-            <svg>
-              <use href={`${icons}#icon-upload-cloud`}></use>
-            </svg>
-            <span>Upload</span>
-          </button>
-        </form>
+                <Field name="image" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="upload__row">
+                      <label>Image URL</label>
+                      <input {...input} type="text" placeholder="Image URL" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="publisher" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="upload__row">
+                      <label>Publisher</label>
+                      <input {...input} type="text" placeholder="Publisher" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="cookingTime" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="upload__row">
+                      <label>Prep time</label>
+                      <input {...input} type="text" placeholder="Prep time" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="servings" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="upload__row">
+                      <label>Servings</label>
+                      <input {...input} type="text" placeholder="Servings" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+              </div>
+
+              <div className="upload__column">
+                <h3 className="upload__heading">Ingredients</h3>
+                <FieldArray name="ingredients">
+                  {({ fields }) =>
+                    fields.map((name, index) => (
+                      <div className="upload__row" key={name}>
+                        <label>Ingredient {index + 1}</label>
+
+                        <div className="upload__row--ingredient">
+                          <Field name={`${name}.quantity`} validate={required}>
+                            {({ input, meta }) => (
+                              <div className="upload__row--quantity">
+                                <input
+                                  {...input}
+                                  type="text"
+                                  placeholder={`Quantity`}
+                                />
+
+                                {meta.error && meta.touched && (
+                                  <span>{meta.error}</span>
+                                )}
+                              </div>
+                            )}
+                          </Field>
+
+                          <Field name={`${name}.unit`} validate={required}>
+                            {({ input, meta }) => (
+                              <div className="upload__row--unit">
+                                <input
+                                  {...input}
+                                  type="text"
+                                  placeholder={`Unit`}
+                                />
+                                {meta.error && meta.touched && (
+                                  <span>{meta.error}</span>
+                                )}
+                              </div>
+                            )}
+                          </Field>
+
+                          <Field
+                            name={`${name}.description`}
+                            validate={required}
+                          >
+                            {({ input, meta }) => (
+                              <div className="upload__row--description">
+                                <input
+                                  {...input}
+                                  type="text"
+                                  placeholder={`Description`}
+                                />
+
+                                {meta.error && meta.touched && (
+                                  <span>{meta.error}</span>
+                                )}
+                              </div>
+                            )}
+                          </Field>
+
+                          <span
+                            onClick={() => fields.remove(index)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            ❌
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </FieldArray>
+                <button
+                  type="button"
+                  onClick={() => push('ingredients', undefined)}
+                  className={classes['btn--add-ingredient']}
+                >
+                  Add Ingredient &#x2B;
+                </button>
+              </div>
+
+              <button className="btn upload__btn">
+                <svg>
+                  <use href={`${icons}#icon-upload-cloud`}></use>
+                </svg>
+                <span>Upload</span>
+              </button>
+            </form>
+          )}
+        ></Form>
       )}
     </div>
   );
@@ -242,7 +258,7 @@ const ModalOverlay = ({ closeHandler }: { closeHandler: () => void }) => {
 
 interface NewPrecipeProps {
   isOpen: boolean;
-  closeHandler: () => void;
+  closeHandler: (path: To) => void;
 }
 
 const NewRecipe = ({ isOpen, closeHandler }: NewPrecipeProps) => {

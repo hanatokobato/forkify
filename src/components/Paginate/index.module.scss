@@ -13,6 +13,10 @@
 .previous,
 .next {
   cursor: pointer;
+
+  a {
+    outline: none;
+  }
 }
 
 .page {
