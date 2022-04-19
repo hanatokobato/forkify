@@ -1,7 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
-import React, { useContext } from 'react';
+import React from 'react';
 import makeApolloClient from '../../apollo';
-import { AuthContext } from '../../context/AuthContext';
 import { getCachedUser } from '../../utils/auth';
 
 interface Props {

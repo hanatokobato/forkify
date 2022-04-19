@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import icons from '../../images/icons.svg';
-import { To, useNavigate } from 'react-router-dom';
+import { To } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
@@ -30,7 +30,6 @@ const ModalOverlay = ({
   closeHandler: (path: To) => void;
 }) => {
   const [error, setError] = useState<ApolloError>();
-  const navigate = useNavigate();
   const required = (value: any) => (value ? undefined : 'Required');
   const [addRecipe, { loading: isLoading, error: mutationError }] = useMutation(
     CREATE_RECIPE

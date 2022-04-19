@@ -1,11 +1,5 @@
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
-import React, {
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { getCachedUser } from '../utils/auth';
 import { formatRecipe } from '../utils/recipe';
 import { RecipeListItem } from './SearchContext';
@@ -58,9 +52,7 @@ const REMOVE_BOOKMARK_MUTATION = gql`
 export const BookmarkContextProvider = ({ children }: Props) => {
   const { token, id } = getCachedUser();
   const [bookmarks, setBookmarks] = useState<RecipeListItem[]>([]);
-  const [getBookmarks, { loading: isLoading, error, data }] = useLazyQuery(
-    BOOKMARK_QUERY
-  );
+  const [getBookmarks] = useLazyQuery(BOOKMARK_QUERY);
   const [bookmarkMutaion] = useMutation(ADD_BOOKMARK_MUTATION);
   const [unBookmarkMutaion] = useMutation(REMOVE_BOOKMARK_MUTATION);
 
@@ -73,7 +65,7 @@ export const BookmarkContextProvider = ({ children }: Props) => {
       });
       setBookmarks(data.recipes.map((d: any) => formatRecipe(d)));
     } catch (e) {}
-  }, [token]);
+  }, [token, getBookmarks, id]);
 
   const addBookmark = async (item: RecipeListItem) => {
     await bookmarkMutaion({ variables: { recipeId: item.id } });
