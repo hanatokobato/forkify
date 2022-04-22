@@ -1,4 +1,13 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import React, {
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { getCachedUser } from '../utils/auth';
+import { formatRecipe } from '../utils/recipe';
 import { RecipeListItem } from './SearchContext';
 
 interface BookmarkContext {
@@ -17,29 +26,68 @@ interface Props {
   children: ReactNode;
 }
 
-export const BookmarkContextProvider = ({ children }: Props) => {
-  const [bookmarks, setBookmarks] = useState<RecipeListItem[]>([]);
+const BOOKMARK_QUERY = gql`
+  query getRecipes($searchQuery: bigint_comparison_exp!) {
+    recipes(where: { recipe_bookmarks: { user_id: $searchQuery } }) {
+      id
+      title
+      publisher
+      image_url
+    }
+  }
+`;
 
-  const addBookmark = (item: RecipeListItem) => {
-    setBookmarks((oldBookmarks) => {
-      const newBookmarks = [...oldBookmarks, item];
-      localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
-      return newBookmarks;
-    });
+const ADD_BOOKMARK_MUTATION = gql`
+  mutation addBookmark($recipeId: bigint!) {
+    insert_recipe_bookmarks_one(object: { recipe_id: $recipeId }) {
+      id
+    }
+  }
+`;
+
+const REMOVE_BOOKMARK_MUTATION = gql`
+  mutation MyMutation($recipeId: bigint!) {
+    delete_recipe_bookmarks(where: { recipe_id: { _eq: $recipeId } }) {
+      returning {
+        id
+      }
+    }
+  }
+`;
+
+export const BookmarkContextProvider = ({ children }: Props) => {
+  const { token, id } = getCachedUser();
+  const [bookmarks, setBookmarks] = useState<RecipeListItem[]>([]);
+  const [getBookmarks, { loading: isLoading, error, data }] = useLazyQuery(
+    BOOKMARK_QUERY
+  );
+  const [bookmarkMutaion] = useMutation(ADD_BOOKMARK_MUTATION);
+  const [unBookmarkMutaion] = useMutation(REMOVE_BOOKMARK_MUTATION);
+
+  const fetchBookmarks = useCallback(async () => {
+    try {
+      if (!token) return;
+
+      const { data } = await getBookmarks({
+        variables: { searchQuery: { _eq: id } },
+      });
+      setBookmarks(data.recipes.map((d: any) => formatRecipe(d)));
+    } catch (e) {}
+  }, [token]);
+
+  const addBookmark = async (item: RecipeListItem) => {
+    await bookmarkMutaion({ variables: { recipeId: item.id } });
+    await fetchBookmarks();
   };
 
-  const removeBookmark = (itemId: string) => {
-    setBookmarks((oldBookmarks) => {
-      const newBookmarks = oldBookmarks.filter((item) => item.id !== itemId);
-      localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
-      return newBookmarks;
-    });
+  const removeBookmark = async (itemId: string) => {
+    await unBookmarkMutaion({ variables: { recipeId: itemId } });
+    await fetchBookmarks();
   };
 
   useEffect(() => {
-    const persistedBookmarks = localStorage.getItem('bookmarks');
-    persistedBookmarks && setBookmarks(JSON.parse(persistedBookmarks));
-  }, []);
+    fetchBookmarks();
+  }, [fetchBookmarks]);
 
   return (
     <BookmarkContext.Provider
