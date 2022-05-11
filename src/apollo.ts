@@ -21,18 +21,21 @@ const makeApolloClient = (token?: string) => {
 
   // Create a WebSocket link:
   const wsLink: any = new WebSocketLink(
-    new SubscriptionClient(process.env.REACT_APP_HASURA_WS_SERVER_ENDPOINT ?? '', {
-      reconnect: true,
-      timeout: 30000,
-      connectionParams: () => {
-        return { headers: getHeaders(token) };
-      },
-      connectionCallback: (err) => {
-        if (err) {
-          wsLink.subscriptionClient.close(false, false);
-        }
-      },
-    })
+    new SubscriptionClient(
+      process.env.REACT_APP_HASURA_WS_SERVER_ENDPOINT ?? '',
+      {
+        reconnect: true,
+        timeout: 30000,
+        connectionParams: () => {
+          return { headers: getHeaders(token) };
+        },
+        connectionCallback: (err) => {
+          if (err) {
+            wsLink.subscriptionClient.close(false, false);
+          }
+        },
+      }
+    )
   );
 
   // chose the link to use based on operation

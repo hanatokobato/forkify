@@ -1,6 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import JwtDecode from 'jwt-decode';
+import { cacheUser } from '../utils/auth';
 
 type UserTypes = 'user';
 
@@ -57,6 +58,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         type: role,
         token: jwtToken,
       };
+
+      cacheUser(newUser);
 
       setCurrentUser(newUser);
     };
