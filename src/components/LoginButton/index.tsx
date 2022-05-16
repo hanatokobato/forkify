@@ -9,7 +9,7 @@ interface Props {
 }
 
 const LoginButton = ({ className }: Props) => {
-  const { loginWithRedirect, user, isAuthenticated, isLoading } = useAuth0();
+  const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
   return (
     <>

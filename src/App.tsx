@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
-import Recipe from './components/Recipe';
-import SearchResults from './components/SearchResults';
-import { Routes, Route, useNavigate, NavigateOptions, To } from 'react-router-dom';
+import { Routes, Route, useNavigate, To } from 'react-router-dom';
 import { SearchContextProvider } from './context/SearchContext';
 import { BookmarkContextProvider } from './context/BookmarkContext';
 import NewRecipe from './components/NewRecipe';
 import ProtectedRoute from './components/ProtectedRoute';
+import Products from './components/Products';
+import Recipes from './components/Recipes';
 
 function App() {
   const [openNewRecipe, setOpenNewRecipe] = useState<boolean>(false);
@@ -27,23 +27,23 @@ function App() {
       <BookmarkContextProvider>
         <SearchContextProvider>
           <Header openNewRecipeHandler={openNewRecipeHandler} />
-          <SearchResults />
+          <Routes>
+            <Route path="/" element={<Recipes />} />
+            <Route
+              path="/recipes/new"
+              element={
+                <ProtectedRoute>
+                  <NewRecipe
+                    isOpen={openNewRecipe}
+                    closeHandler={closeNewRecipeHandler}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/recipes/:id" element={<Recipes />} />
+            <Route path="/products" element={<Products />} />
+          </Routes>
         </SearchContextProvider>
-        <Routes>
-          <Route path="/" element={<Recipe />} />
-          <Route
-            path="/recipes/new"
-            element={
-              <ProtectedRoute>
-                <NewRecipe
-                  isOpen={openNewRecipe}
-                  closeHandler={closeNewRecipeHandler}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/recipes/:id" element={<Recipe />} />
-        </Routes>
       </BookmarkContextProvider>
     </>
   );

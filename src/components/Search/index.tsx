@@ -4,15 +4,17 @@ import React, {
   useContext,
   useState,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchContext from '../../context/SearchContext';
 
 function Search() {
-  const [query, setQuery] = useState<string>('')
-
+  const [query, setQuery] = useState<string>('');
+  const navigate = useNavigate();
   const searchCtx = useContext(SearchContext);
 
   const submitSearchHandler: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    navigate('/');
     searchCtx.fetchRecipes(query);
   };
 
