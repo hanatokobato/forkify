@@ -1,7 +1,10 @@
 import { Grid, styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { commerce } from '../../utils/commerce';
-import Product from '../Product';
+import Product, { Product as ProductType } from '../Product';
+import { RootState } from '../../store';
+import { setProducts } from '../../store/products/slice';
 
 const PREFIX = 'Products';
 
@@ -20,12 +23,13 @@ const Root = styled('main')(({ theme }) => ({
 }));
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const products = useSelector((state: RootState) => state.products.products);
+  const dispatch = useDispatch();
 
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
 
-    setProducts(data);
+    dispatch(setProducts(data));
   };
 
   useEffect(() => {
