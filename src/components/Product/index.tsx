@@ -14,6 +14,7 @@ const PREFIX = 'Product';
 
 interface Props {
   product: Product;
+  onAddToCart: any;
 }
 
 export interface Product {
@@ -49,7 +50,9 @@ const Root = styled(Card)(({ theme }) => ({
   },
 }));
 
-const Product = ({ product }: Props) => {
+const Product = ({ product, onAddToCart }: Props) => {
+  const handleAddToCart = () => onAddToCart(product.id, 1);
+
   return (
     <Root className={classes.root}>
       <CardMedia
@@ -74,7 +77,7 @@ const Product = ({ product }: Props) => {
         <Typography gutterBottom variant="h5" component="h2">
           ${product.price.formatted}
         </Typography>
-        <IconButton aria-label="Add to Cart">
+        <IconButton aria-label="Add to Cart" onClick={handleAddToCart}>
           <AddShoppingCart />
         </IconButton>
       </CardActions>
