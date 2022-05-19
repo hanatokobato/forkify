@@ -21,6 +21,12 @@ const theme = createTheme({
       main: '#fbdb89',
     },
   },
+  shape: {
+    borderRadius: 20,
+  },
+  typography: {
+    fontSize: 22.4,
+  },
 });
 
 function App() {
@@ -82,7 +88,10 @@ function App() {
 
   const handleCaptureCheckout = async (checkoutTokenId: any, newOrder: any) => {
     try {
-      const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
+      const incomingOrder = await commerce.checkout.capture(
+        checkoutTokenId,
+        newOrder
+      );
 
       setOrder(incomingOrder);
 

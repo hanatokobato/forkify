@@ -44,6 +44,7 @@ const Root = styled(Container)(({ theme }) => ({
   },
   [`& .${classes.checkoutButton}`]: {
     minWidth: '150px',
+    height: '40px',
   },
   [`& .${classes.link}`]: {
     textDecoration: 'none',
@@ -90,7 +91,7 @@ const Cart = ({
         ))}
       </Grid>
       <div className={classes.cardDetails}>
-        <Typography variant="h4">
+        <Typography variant="h5" component="h2">
           Subtotal: {cart.subtotal.formatted_with_symbol}
         </Typography>
         <div>
@@ -122,7 +123,7 @@ const Cart = ({
 
   return (
     <Root>
-      <Typography className={classes.title} variant="h3" gutterBottom>
+      <Typography className={classes.title} variant="h4" gutterBottom>
         Your Shopping Cart
       </Typography>
       {!cart.line_items.length ? renderEmptyCart() : renderCart()}
