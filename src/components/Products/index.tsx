@@ -22,7 +22,7 @@ const Root = styled('main')(({ theme }) => ({
   },
 }));
 
-const Products = () => {
+const Products = ({onAddToCart}: {onAddToCart: any}) => {
   const products = useSelector((state: RootState) => state.products.products);
   const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ const Products = () => {
       <Grid container justifyContent="center" spacing={4}>
         {products.map((product) => (
           <Grid key={product.id} item xs={12} sm={6} md={4} lg={3}>
-            <Product product={product} />
+            <Product product={product} onAddToCart={onAddToCart} />
           </Grid>
         ))}
       </Grid>
