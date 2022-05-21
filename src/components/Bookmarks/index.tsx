@@ -42,7 +42,7 @@ const Bookmarks = () => {
                 </p>
                 <div
                   className={`preview__user-generated ${
-                    bookmarkedRecipe.key === API_KEY ? '' : 'hidden'
+                    bookmarkedRecipe.userId ? '' : 'hidden'
                   }`}
                 >
                   <svg>

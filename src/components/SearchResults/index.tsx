@@ -72,7 +72,7 @@ function SearchResults() {
                     <p className="preview__publisher">{preview.publisher}</p>
                     <div
                       className={`preview__user-generated ${
-                        preview.key === API_KEY ? '' : 'hidden'
+                        preview.userId ? '' : 'hidden'
                       }`}
                     >
                       <svg>

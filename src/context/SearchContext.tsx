@@ -4,7 +4,7 @@ import { ApolloError, gql, useLazyQuery } from '@apollo/client';
 
 export type RecipeListItem = Pick<
   RecipeData,
-  'id' | 'title' | 'publisher' | 'image' | 'key'
+  'id' | 'title' | 'publisher' | 'image' | 'userId'
 >;
 
 interface SearchContext {
@@ -26,13 +26,10 @@ interface Props {
 }
 
 const RECIPES_QUERY = gql`
-  query getRecipes(
-    $searchQuery: String_comparison_exp!
-  ) {
-    recipes(
-      where: {title: $searchQuery}
-    ) {
+  query getRecipes($searchQuery: String_comparison_exp!) {
+    recipes(where: { title: $searchQuery }) {
       id
+      user_id
       title
       publisher
       image_url
@@ -42,7 +39,9 @@ const RECIPES_QUERY = gql`
 
 export const SearchContextProvider = ({ children }: Props) => {
   const [recipeList, setRecipeList] = useState<RecipeListItem[]>([]);
-  const [getRecipes, { loading: isLoading, error, data }] = useLazyQuery(RECIPES_QUERY);
+  const [getRecipes, { loading: isLoading, error, data }] = useLazyQuery(
+    RECIPES_QUERY
+  );
 
   const fetchRecipes = useCallback(
     (query) => {
@@ -50,6 +49,7 @@ export const SearchContextProvider = ({ children }: Props) => {
         const { recipes: fetchedRecipes } = data.data;
         const formattedRecipes = fetchedRecipes.map((recipe: any) => ({
           id: recipe.id,
+          userId: recipe.user_id,
           title: recipe.title,
           publisher: recipe.publisher,
           image: recipe.image_url,
@@ -58,7 +58,9 @@ export const SearchContextProvider = ({ children }: Props) => {
         setRecipeList(formattedRecipes);
       };
 
-      getRecipes({variables: {searchQuery: {_ilike: `%${query}%`}}}).then(formatResult);
+      getRecipes({ variables: { searchQuery: { _ilike: `%${query}%` } } }).then(
+        formatResult
+      );
     },
     [getRecipes]
   );
