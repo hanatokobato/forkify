@@ -62,12 +62,11 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }: Props) => {
 
   return (
     <Root className="cart-item">
-      <CardMedia
-        image={item.image.url}
-        className={classes.media}
-      />
+      <CardMedia image={item.image.url} className={classes.media} />
       <CardContent className={classes.cardContent}>
-        <Typography noWrap variant="h4">{item.name}</Typography>
+        <Typography noWrap variant="h5" component="h2">
+          {item.name}
+        </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <div className={classes.buttons}>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import icons from '../../images/icons.svg';
-import { Actions } from './Actions';
 import classes from './index.module.scss';
 
 interface Props {
@@ -28,7 +27,6 @@ const LoginButton = ({ className }: Props) => {
           <span>Log In</span>
         </button>
       )}
-      <Actions classes={classes} />
     </>
   );
 };
