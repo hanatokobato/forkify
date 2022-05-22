@@ -24,6 +24,7 @@ const BOOKMARK_QUERY = gql`
   query getRecipes($searchQuery: bigint_comparison_exp!) {
     recipes(where: { recipe_bookmarks: { user_id: $searchQuery } }) {
       id
+      user_id
       title
       publisher
       image_url

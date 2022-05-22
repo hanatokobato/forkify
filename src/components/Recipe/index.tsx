@@ -15,13 +15,14 @@ export interface RecipeData {
   cookingTime: string;
   ingredients: { quantity: number | null; description: string; unit: string }[];
   isBookmarked?: boolean;
-  key?: string;
+  userId: number;
 }
 
 const RECIPE_QUERY = gql`
   query getRecipe($id: bigint!) {
     recipes_by_pk(id: $id) {
       id
+      user_id
       title
       publisher
       source_url
@@ -39,7 +40,9 @@ const RECIPE_QUERY = gql`
 
 function Recipe() {
   const [recipe, setRecipe] = useState<RecipeData>();
-  const [fetchRecipe, { loading: isLoading, error }] = useLazyQuery(RECIPE_QUERY);
+  const [fetchRecipe, { loading: isLoading, error }] = useLazyQuery(
+    RECIPE_QUERY
+  );
   const bookmarkCtx = useContext(BookmarkContext);
   const params = useParams();
 
@@ -72,12 +75,12 @@ function Recipe() {
         isBookmarked: bookmarkCtx.bookmarks.some(
           (item) => item.id === fetchedRecipe.id
         ),
-        key: fetchedRecipe.key,
+        userId: fetchedRecipe.user_id,
       };
       setRecipe(fomattedRecipe);
     };
 
-    fetchRecipe({variables: {id: params.id}}).then(formatRecipe);
+    fetchRecipe({ variables: { id: params.id } }).then(formatRecipe);
   }, [fetchRecipe, params.id]);
 
   const updateServingsHandler = (newValue: number) => {
@@ -104,13 +107,13 @@ function Recipe() {
         title,
         publisher,
         image,
-        key,
+        userId,
       }: RecipeData) => ({
         id,
         title,
         publisher,
         image,
-        key,
+        userId,
       }))(recipe!);
       bookmarkCtx.addBookmark(bookmarkAttr);
       setRecipe(
@@ -207,7 +210,7 @@ function Recipe() {
             </div>
             <div
               className={`recipe__user-generated ${
-                recipe.key === API_KEY ? '' : 'hidden'
+                recipe.userId ? '' : 'hidden'
               }`}
             >
               <svg>
