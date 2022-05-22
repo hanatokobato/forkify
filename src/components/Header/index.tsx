@@ -52,8 +52,10 @@ const Root = styled(AppBar)(({ theme }) => ({
 
 const Header = ({
   openNewRecipeHandler,
+  totalItems,
 }: {
   openNewRecipeHandler: () => void;
+  totalItems: number;
 }) => {
   const { isAuthenticated } = useAuth0();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -81,7 +83,7 @@ const Header = ({
           aria-label="Show cart items"
           color="inherit"
         >
-          <Badge badgeContent={0} color="secondary">
+          <Badge badgeContent={totalItems} color="secondary">
             <ShoppingCart fontSize="medium" />
           </Badge>
         </IconButton>
@@ -114,7 +116,7 @@ const Header = ({
                   color="inherit"
                   size="medium"
                 >
-                  <Badge badgeContent={10} color="secondary">
+                  <Badge badgeContent={totalItems} color="secondary">
                     <ShoppingCart fontSize="medium" color="primary" />
                   </Badge>
                 </IconButton>

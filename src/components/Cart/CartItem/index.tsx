@@ -7,6 +7,7 @@ import {
   CardContent,
   CardMedia,
   styled,
+  Box,
 } from '@mui/material';
 
 export interface Item {
@@ -30,6 +31,7 @@ interface Props {
 const PREFIX = 'CartItem';
 
 const classes = {
+  cardItem: `${PREFIX}-item`,
   media: `${PREFIX}-content`,
   cardContent: `${PREFIX}-cardContent`,
   cardActions: `${PREFIX}-cardActions`,
@@ -37,8 +39,14 @@ const classes = {
 };
 
 const Root = styled(Card)(({ theme }) => ({
+  [`&.${classes.cardItem}`]: {
+    display: 'flex',
+    padding: '12px 15px',
+    flexDirection: 'column',
+  },
   [`& .${classes.media}`]: {
-    height: 260,
+    width: 100,
+    height: 100,
   },
   [`& .${classes.cardContent}`]: {
     display: 'flex',
@@ -61,13 +69,19 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }: Props) => {
     onRemoveFromCart(lineItemId);
 
   return (
-    <Root className="cart-item">
-      <CardMedia image={item.image.url} className={classes.media} />
-      <CardContent className={classes.cardContent}>
-        <Typography noWrap variant="h5" component="h2">
-          {item.name}
-        </Typography>
-      </CardContent>
+    <Root className={classes.cardItem}>
+      <Box sx={{ display: 'flex' }}>
+        <CardMedia
+          component="img"
+          image={item.image.url}
+          className={classes.media}
+        />
+        <CardContent className={classes.cardContent}>
+          <Typography variant="h5" component="h5" sx={{ fontSize: '2rem' }}>
+            {item.name}
+          </Typography>
+        </CardContent>
+      </Box>
       <CardActions className={classes.cardActions}>
         <div className={classes.buttons}>
           <Button
@@ -86,7 +100,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }: Props) => {
             +
           </Button>
         </div>
-        <Typography variant="h5">
+        <Typography variant="h5" sx={{ fontSize: '2rem' }}>
           {item.line_total.formatted_with_symbol}
         </Typography>
         <Button

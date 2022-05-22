@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import CartItem, { Item as LineItem } from './CartItem';
 
 export interface Cart {
+  total_items: number;
   line_items: LineItem[];
   subtotal: {
     formatted_with_symbol: string;
@@ -21,6 +22,7 @@ interface Props {
 const PREFIX = 'Cart';
 
 const classes = {
+  container: `${PREFIX}-container`,
   title: `${PREFIX}-title`,
   emptyButton: `${PREFIX}-emptyButton`,
   checkoutButton: `${PREFIX}-checkoutButton`,
@@ -29,6 +31,9 @@ const classes = {
 };
 
 const Root = styled(Container)(({ theme }) => ({
+  [`&.${classes.container}`]: {
+    backgroundColor: '#f9f5f3',
+  },
   [`& .${classes.title}`]: {
     marginTop: '2rem',
     marginBottom: '5rem',
@@ -122,7 +127,7 @@ const Cart = ({
   );
 
   return (
-    <Root>
+    <Root className={classes.container}>
       <Typography className={classes.title} variant="h4" gutterBottom>
         Your Shopping Cart
       </Typography>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
 import { API_KEY } from '../../consts';
 import { BookmarkContext } from '../../context/BookmarkContext';
@@ -243,6 +243,10 @@ function Recipe() {
                 </li>
               ))}
             </ul>
+            <p className="recipe__directions-text"></p>
+            <Link className="btn--small recipe__btn" to="/products">
+              <span>Shop Now</span>
+            </Link>
           </div>
           <div className="recipe__directions">
             <h2 className="heading--2">How to cook it</h2>
