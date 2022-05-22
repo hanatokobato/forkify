@@ -1,5 +1,6 @@
 import { AddShoppingCart } from '@mui/icons-material';
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
@@ -35,10 +36,13 @@ const classes = {
 const Root = styled(Card)(({ theme }) => ({
   [`&.${classes.root}`]: {
     maxWidth: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '30px 10px',
   },
   [`& .${classes.media}`]: {
-    height: 0,
-    paddingTop: '56.25%',
+    width: 150,
+    height: 150,
   },
   [`& .${classes.cardContent}`]: {
     display: 'flex',
@@ -46,7 +50,9 @@ const Root = styled(Card)(({ theme }) => ({
   },
   [`& .${classes.cardActions}`]: {
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
 }));
 
@@ -55,32 +61,43 @@ const Product = ({ product, onAddToCart }: Props) => {
 
   return (
     <Root className={classes.root}>
-      <CardMedia
-        className={classes.media}
-        image={product.image.url}
-        title={product.name}
-      />
       <CardContent>
         <div className={classes.cardContent}>
-          <Typography noWrap gutterBottom variant="h5" component="h2">
+          <Typography
+            noWrap
+            gutterBottom
+            variant="h5"
+            sx={{ fontSize: '2rem' }}
+          >
             {product.name}
           </Typography>
         </div>
-        <Typography
-          dangerouslySetInnerHTML={{ __html: product.description }}
-          variant="body2"
-          color="textSecondary"
-          component="p"
-        />
       </CardContent>
-      <CardActions disableSpacing className={classes.cardActions}>
-        <Typography gutterBottom variant="h5" component="h2">
-          ${product.price.formatted}
-        </Typography>
-        <IconButton aria-label="Add to Cart" onClick={handleAddToCart}>
-          <AddShoppingCart />
-        </IconButton>
-      </CardActions>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CardMedia
+          className={classes.media}
+          image={product.image.url}
+          title={product.name}
+        />
+        <CardActions disableSpacing className={classes.cardActions}>
+          <Typography gutterBottom variant="h5" sx={{ fontSize: '2rem' }}>
+            ${product.price.formatted}
+          </Typography>
+          <Typography
+            dangerouslySetInnerHTML={{ __html: product.description }}
+            variant="body2"
+            color="textSecondary"
+            component="p"
+          />
+          <IconButton
+            aria-label="Add to Cart"
+            onClick={handleAddToCart}
+            color="primary"
+          >
+            <AddShoppingCart />
+          </IconButton>
+        </CardActions>
+      </Box>
     </Root>
   );
 };

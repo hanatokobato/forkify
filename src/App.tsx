@@ -20,11 +20,15 @@ const theme = createTheme({
     secondary: {
       main: '#fbdb89',
     },
+    background: {
+      default: '#f9f5f3',
+    },
   },
   shape: {
     borderRadius: 20,
   },
   typography: {
+    fontFamily: '"Nunito Sans",sans-serif',
     fontSize: 22.4,
   },
 });
@@ -34,6 +38,7 @@ function App() {
   const navigate = useNavigate();
 
   const [cart, setCart] = useState<CartType>({
+    total_items: 0,
     line_items: [],
     subtotal: {
       formatted_with_symbol: '',
@@ -110,7 +115,10 @@ function App() {
       <ThemeProvider theme={theme}>
         <BookmarkContextProvider>
           <SearchContextProvider>
-            <Header openNewRecipeHandler={openNewRecipeHandler} />
+            <Header
+              openNewRecipeHandler={openNewRecipeHandler}
+              totalItems={cart.total_items}
+            />
             <Routes>
               <Route path="/" element={<Recipes />} />
               <Route
