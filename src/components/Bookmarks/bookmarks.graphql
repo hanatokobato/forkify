@@ -1,0 +1,23 @@
+query bookmarkedRecipes($searchQuery: bigint_comparison_exp!) {
+  recipes(where: { recipe_bookmarks: { user_id: $searchQuery } }) {
+    id
+    user_id
+    title
+    publisher
+    image_url
+  }
+}
+
+mutation addBookmark($recipeId: bigint!) {
+  insert_recipe_bookmarks_one(object: { recipe_id: $recipeId }) {
+    id
+  }
+}
+
+mutation deleteBookmark($recipeId: bigint!) {
+  delete_recipe_bookmarks(where: { recipe_id: { _eq: $recipeId } }) {
+    returning {
+      id
+    }
+  }
+}

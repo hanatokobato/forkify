@@ -1,6 +1,7 @@
 import React, { ReactNode, useCallback, useState } from 'react';
 import { RecipeData } from '../components/Recipe';
-import { ApolloError, gql, useLazyQuery } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
+import { useSearchedRecipesLazyQuery } from '../generated/graphql';
 
 export type RecipeListItem = Pick<
   RecipeData,
@@ -25,23 +26,12 @@ interface Props {
   children: ReactNode;
 }
 
-const RECIPES_QUERY = gql`
-  query getRecipes($searchQuery: String_comparison_exp!) {
-    recipes(where: { title: $searchQuery }) {
-      id
-      user_id
-      title
-      publisher
-      image_url
-    }
-  }
-`;
-
 export const SearchContextProvider = ({ children }: Props) => {
   const [recipeList, setRecipeList] = useState<RecipeListItem[]>([]);
-  const [getRecipes, { loading: isLoading, error, data }] = useLazyQuery(
-    RECIPES_QUERY
-  );
+  const [
+    getRecipes,
+    { loading: isLoading, error, data },
+  ] = useSearchedRecipesLazyQuery();
 
   const fetchRecipes = useCallback(
     (query) => {
