@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
-import { API_KEY } from '../../consts';
 import { BookmarkContext } from '../../context/BookmarkContext';
-import { gql, useLazyQuery } from '@apollo/client';
+import { useRecipeLazyQuery } from '../../generated/graphql';
 
 export interface RecipeData {
   id: string;
@@ -18,31 +17,9 @@ export interface RecipeData {
   userId: number;
 }
 
-const RECIPE_QUERY = gql`
-  query getRecipe($id: bigint!) {
-    recipes_by_pk(id: $id) {
-      id
-      user_id
-      title
-      publisher
-      source_url
-      image_url
-      servings
-      cooking_time
-      ingredients {
-        quantity
-        description
-        unit
-      }
-    }
-  }
-`;
-
 function Recipe() {
   const [recipe, setRecipe] = useState<RecipeData>();
-  const [fetchRecipe, { loading: isLoading, error }] = useLazyQuery(
-    RECIPE_QUERY
-  );
+  const [fetchRecipe, { loading: isLoading, error }] = useRecipeLazyQuery();
   const bookmarkCtx = useContext(BookmarkContext);
   const params = useParams();
 

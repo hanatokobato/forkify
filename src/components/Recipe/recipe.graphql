@@ -1,0 +1,23 @@
+query Recipe($id: bigint!) {
+  recipes_by_pk(id: $id) {
+    id
+    user_id
+    title
+    publisher
+    source_url
+    image_url
+    servings
+    cooking_time
+    ingredients {
+      quantity
+      description
+      unit
+    }
+  }
+}
+
+mutation addRecipe($recipe: recipes_insert_input!) {
+  insert_recipes_one(object: $recipe) {
+    id
+  }
+}

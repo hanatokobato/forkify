@@ -1,0 +1,9 @@
+query searchedRecipes($searchQuery: String_comparison_exp!) {
+  recipes(where: { title: $searchQuery }) {
+    id
+    user_id
+    title
+    publisher
+    image_url
+  }
+}

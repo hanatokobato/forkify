@@ -5,8 +5,9 @@ import { To } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
-import { ApolloError, gql, useMutation } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import classes from './index.module.scss';
+import { useAddRecipeMutation } from '../../generated/graphql';
 
 const Backdrop = ({ closeHandler }: { closeHandler: (path: To) => void }) => {
   const clickHandler = () => {
@@ -16,14 +17,6 @@ const Backdrop = ({ closeHandler }: { closeHandler: (path: To) => void }) => {
   return <div className="overlay" onClick={clickHandler}></div>;
 };
 
-const CREATE_RECIPE = gql`
-  mutation MyMutation($recipe: recipes_insert_input!) {
-    insert_recipes_one(object: $recipe) {
-      id
-    }
-  }
-`;
-
 const ModalOverlay = ({
   closeHandler,
 }: {
@@ -31,8 +24,7 @@ const ModalOverlay = ({
 }) => {
   const [error, setError] = useState<ApolloError>();
   const required = (value: any) => (value ? undefined : 'Required');
-  const [addRecipe, { loading: isLoading, error: mutationError }] = useMutation(
-    CREATE_RECIPE
+  const [addRecipe, { loading: isLoading, error: mutationError }] = useAddRecipeMutation(
   );
 
   useEffect(() => {
@@ -55,7 +47,7 @@ const ModalOverlay = ({
 
       const { data } = await addRecipe({ variables: { recipe: recipe } });
 
-      closeHandler(`/recipes/${data.insert_recipes_one.id}`);
+      closeHandler(`/recipes/${data?.insert_recipes_one?.id}`);
     } catch (e: any) {
       setError(e.message || 'Something went wrong!');
     }
