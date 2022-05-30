@@ -2,11 +2,16 @@ import { HttpLink, split, ApolloClient, InMemoryCache } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import JwtDecode from 'jwt-decode';
+import { JwtToken } from './context/AuthContext';
 
 const getHeaders = (token?: string) => {
   const headers: any = {};
   if (token) {
     headers.authorization = `Bearer ${token}`;
+    const decodedToken = JwtDecode<JwtToken>(token);
+    const claims = decodedToken['https://hasura.io/jwt/claims'];
+    headers['x-hasura-role'] = claims['x-hasura-role'];
   }
   return headers;
 };

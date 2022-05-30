@@ -24,8 +24,10 @@ const ModalOverlay = ({
 }) => {
   const [error, setError] = useState<ApolloError>();
   const required = (value: any) => (value ? undefined : 'Required');
-  const [addRecipe, { loading: isLoading, error: mutationError }] = useAddRecipeMutation(
-  );
+  const [
+    addRecipe,
+    { loading: isLoading, error: mutationError },
+  ] = useAddRecipeMutation();
 
   useEffect(() => {
     setError(mutationError);
@@ -248,23 +250,18 @@ const ModalOverlay = ({
 };
 
 interface NewPrecipeProps {
-  isOpen: boolean;
   closeHandler: (path: To) => void;
 }
 
-const NewRecipe = ({ isOpen, closeHandler }: NewPrecipeProps) => {
+const NewRecipe = ({ closeHandler }: NewPrecipeProps) => {
   return (
     <>
-      {isOpen &&
-        ReactDOM.createPortal(
-          <Backdrop closeHandler={closeHandler} />,
-          document.getElementById('backdrop-root') as HTMLElement
-        )}
-      {isOpen &&
-        ReactDOM.createPortal(
-          <ModalOverlay closeHandler={closeHandler} />,
-          document.getElementById('modal-root') as HTMLElement
-        )}
+      ReactDOM.createPortal(
+      <Backdrop closeHandler={closeHandler} />,
+      document.getElementById('backdrop-root') as HTMLElement )
+      ReactDOM.createPortal(
+      <ModalOverlay closeHandler={closeHandler} />,
+      document.getElementById('modal-root') as HTMLElement )
     </>
   );
 };

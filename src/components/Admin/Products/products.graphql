@@ -1,0 +1,29 @@
+mutation createProduct($productInput: CreateProductInput!) {
+  createProduct(input: $productInput) {
+    product {
+      id
+      name
+    }
+    errors
+  }
+}
+
+query getProducts {
+  products {
+    description
+    images {
+      id
+      photoLink
+    }
+    id
+    name
+    price
+    quantity
+  }
+}
+
+mutation deleteProduct($productId: ID!) {
+  deleteProduct(input: { id: $productId }) {
+    errors
+  }
+}
