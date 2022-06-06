@@ -23,6 +23,7 @@ html {
 body {
   font-family: 'Nunito Sans', sans-serif;
   font-weight: 400;
+  font-size: 1.6rem;
   line-height: 1.6;
   color: $color-grey-dark-1;
   background-image: $gradient;
@@ -56,4 +57,9 @@ body {
     display: grid;
     grid-template-columns: 1fr 2fr;
   }
+}
+
+.admin-container {
+  display: flex;
+  background-color: #fff;
 }

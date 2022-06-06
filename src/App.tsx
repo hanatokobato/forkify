@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from './components/Header';
-import { Routes, Route, useNavigate, To } from 'react-router-dom';
+import { Routes, Route, useNavigate, To, useLocation } from 'react-router-dom';
 import { SearchContextProvider } from './context/SearchContext';
 import { BookmarkContextProvider } from './context/BookmarkContext';
 import NewRecipe from './components/NewRecipe';
@@ -11,6 +11,8 @@ import Cart, { Cart as CartType } from './components/Cart';
 import { commerce } from './utils/commerce';
 import Checkout from './components/CheckoutForm/Checkout';
 import { createTheme, ThemeProvider } from '@mui/material';
+import Admin from './components/Admin';
+import { ADMIN, AuthContext, USER } from './context/AuthContext';
 
 const theme = createTheme({
   palette: {
@@ -24,9 +26,6 @@ const theme = createTheme({
       default: '#f9f5f3',
     },
   },
-  shape: {
-    borderRadius: 20,
-  },
   typography: {
     fontFamily: '"Nunito Sans",sans-serif',
     fontSize: 22.4,
@@ -34,8 +33,8 @@ const theme = createTheme({
 });
 
 function App() {
-  const [openNewRecipe, setOpenNewRecipe] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
 
   const [cart, setCart] = useState<CartType>({
     total_items: 0,
@@ -49,11 +48,9 @@ function App() {
 
   const openNewRecipeHandler = () => {
     navigate('/recipes/new');
-    setOpenNewRecipe(true);
   };
 
   const closeNewRecipeHandler = (path: To) => {
-    setOpenNewRecipe(false);
     navigate(path);
   };
 
@@ -113,55 +110,84 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <BookmarkContextProvider>
-          <SearchContextProvider>
-            <Header
-              openNewRecipeHandler={openNewRecipeHandler}
-              totalItems={cart.total_items}
+        {currentUser?.type === ADMIN && (
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
             />
-            <Routes>
-              <Route path="/" element={<Recipes />} />
-              <Route
-                path="/recipes/new"
-                element={
-                  <ProtectedRoute>
-                    <NewRecipe
-                      isOpen={openNewRecipe}
-                      closeHandler={closeNewRecipeHandler}
-                    />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/recipes/:id" element={<Recipes />} />
-              <Route
-                path="/products"
-                element={<Products onAddToCart={handleAddToCart} />}
-              />
-              <Route
-                path="/cart"
-                element={
-                  <Cart
-                    cart={cart}
-                    onUpdateCartQty={handleUpdateCartQty}
-                    onRemoveFromCart={handleRemoveFromCart}
-                    onEmptyCart={handleEmptyCart}
+            <Route
+              path="/admin/*"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        )}
+        {(!currentUser || currentUser.type === USER) && (
+          <BookmarkContextProvider>
+            <SearchContextProvider>
+              <div className="container">
+                <Header
+                  openNewRecipeHandler={openNewRecipeHandler}
+                  totalItems={cart.total_items}
+                />
+                <Routes>
+                  <Route path="/" element={<Recipes />} />
+                  <Route
+                    path="/recipes/new"
+                    element={
+                      <ProtectedRoute>
+                        <NewRecipe closeHandler={closeNewRecipeHandler} />
+                      </ProtectedRoute>
+                    }
                   />
-                }
-              />
-              <Route
-                path="/checkout"
-                element={
-                  <Checkout
-                    cart={cart}
-                    order={order}
-                    onCaptureCheckout={handleCaptureCheckout}
-                    error={errorMessage}
+                  <Route path="/recipes/:id" element={<Recipes />} />
+                  <Route
+                    path="/products"
+                    element={
+                      <ProtectedRoute>
+                        <Products onAddToCart={handleAddToCart} />
+                      </ProtectedRoute>
+                    }
                   />
-                }
-              />
-            </Routes>
-          </SearchContextProvider>
-        </BookmarkContextProvider>
+                  <Route
+                    path="/cart"
+                    element={
+                      <ProtectedRoute>
+                        <Cart
+                          cart={cart}
+                          onUpdateCartQty={handleUpdateCartQty}
+                          onRemoveFromCart={handleRemoveFromCart}
+                          onEmptyCart={handleEmptyCart}
+                        />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedRoute>
+                        <Checkout
+                          cart={cart}
+                          order={order}
+                          onCaptureCheckout={handleCaptureCheckout}
+                          error={errorMessage}
+                        />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </div>
+            </SearchContextProvider>
+          </BookmarkContextProvider>
+        )}
       </ThemeProvider>
     </>
   );

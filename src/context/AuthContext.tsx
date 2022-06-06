@@ -3,7 +3,10 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import JwtDecode from 'jwt-decode';
 import { cacheUser } from '../utils/auth';
 
-type UserTypes = 'user';
+export const USER = 'user';
+export const ADMIN = 'admin';
+
+type UserTypes = 'user' | 'admin';
 
 interface CurrentUser {
   id: number;
@@ -24,12 +27,13 @@ export const AuthContext = createContext<AuthContext>({
   },
 });
 
-interface JwtToken {
+export interface JwtToken {
   'https://hasura.io/jwt/claims': {
     'x-hasura-default-role': UserTypes;
     'x-hasura-allowed-roles': UserTypes[];
     'x-hasura-user-id': string;
     'x-auth0-user-id': string;
+    'x-hasura-role': UserTypes;
   };
 }
 
@@ -50,7 +54,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       const jwtToken = await getAccessTokenSilently();
       const decodedToken = JwtDecode<JwtToken>(jwtToken);
       const claims = decodedToken['https://hasura.io/jwt/claims'];
-      const role = claims['x-hasura-allowed-roles'][0];
+      const role = claims['x-hasura-role'];
       const userId = parseInt(claims['x-hasura-user-id']);
 
       const newUser: CurrentUser = {
