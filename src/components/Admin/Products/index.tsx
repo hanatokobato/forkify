@@ -86,7 +86,7 @@ const Products = () => {
       renderCell: (params: any) => {
         return (
           <>
-            <Link to={'/product/' + params.row.id}>
+            <Link to={`/admin/products/${params.row.id}/edit`}>
               <button className={classes.productListEdit}>Edit</button>
             </Link>
             <DeleteOutline

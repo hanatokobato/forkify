@@ -5,6 +5,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import ProductList from './Products';
 import NewProduct from './Products/NewProduct';
 import { Box } from '@mui/material';
+import EditProduct from './Products/EditProduct';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const Admin = () => {
           <Routes>
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/new" element={<NewProduct />} />
+            <Route path="/products/:id/edit" element={<EditProduct />} />
           </Routes>
         </Box>
       </div>

@@ -27,3 +27,34 @@ mutation deleteProduct($productId: ID!) {
     errors
   }
 }
+
+query getProduct($productId: ID!) {
+  product(id: $productId) {
+    id
+    description
+    quantity
+    price
+    name
+    images {
+      id
+      photoLink
+    }
+  }
+}
+
+mutation updateProduct($productInput: UpdateProductInput!) {
+  updateProduct(input: $productInput) {
+    product {
+      id
+      description
+      name
+      price
+      quantity
+      images {
+        id
+        photoLink
+      }
+    }
+    errors
+  }
+}
