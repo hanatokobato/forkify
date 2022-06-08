@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
 import { Box, Card, CardContent, Typography } from '@mui/material';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import TextField from '../../FormInput/TextField';
 import UploadImages from '../../FormInput/UploadImages';
+import { Product as ProductType } from '../../../../generated/graphql';
+import { Image as ImageType } from '../../FormInput/UploadImages';
+import { getDownloadUrl } from '../../../../utils/uploadImage';
 
 const PREFIX = 'FormDetail';
 
@@ -17,10 +20,29 @@ const InputWrapper = styled(Box)(({ theme }) => ({
 }));
 
 interface Props {
+  product?: ProductType;
   fileChangeHandler: (files: any) => void;
 }
 
-const FormDetail = ({ fileChangeHandler }: Props) => {
+const FormDetail = ({ fileChangeHandler, product }: Props) => {
+  const [imageInfos, setImageInfos] = useState<ImageType[]>([]);
+
+  const getImageUrls = useCallback(async () => {
+    const images = await Promise.all(
+      product?.images?.map(async (i) => {
+        return {
+          name: `image${i.id}`,
+          url: await getDownloadUrl(i.photoLink),
+        };
+      }) || []
+    );
+    if (images) setImageInfos(images);
+  }, [product]);
+
+  useEffect(() => {
+    getImageUrls();
+  }, [getImageUrls]);
+
   return (
     <Box
       sx={{
@@ -51,7 +73,7 @@ const FormDetail = ({ fileChangeHandler }: Props) => {
               <TextField name="sku" label="SKU" />
             </Box>
             <Box sx={{ width: '50%', marginLeft: '1rem' }}>
-              <TextField name="inventory" label="Inventory available" />
+              <TextField name="quantity" label="Inventory available" />
             </Box>
           </InputWrapper>
           <InputWrapper className={classes.inputWrapper}>
@@ -91,7 +113,10 @@ const FormDetail = ({ fileChangeHandler }: Props) => {
           >
             IMAGES GALLERY
           </Typography>
-          <UploadImages onFileChange={fileChangeHandler} />
+          <UploadImages
+            onFileChange={fileChangeHandler}
+            imageInfos={imageInfos}
+          />
         </CardContent>
       </Card>
     </Box>

@@ -1,70 +1,66 @@
 import { ArrowBack } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  Container,
-  Link,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Typography,
-} from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import React, { useCallback, useState } from 'react';
-import classes from './index.module.scss';
+import { Box, Container, Link, Typography } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
-import Navigation from './Navigation';
-import FormDetail from './FormDetail';
-import FormAction from './FormAction';
-import { uploadImage } from '../../../../utils/uploadImage';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import FormAction from '../NewProduct/FormAction';
+import FormDetail from '../NewProduct/FormDetail';
+import Navigation from '../NewProduct/Navigation';
+import { FormData } from '../NewProduct';
 import {
-  useCreateProductMutation,
+  UpdateProductInput,
+  useGetProductLazyQuery,
   useGetProductsQuery,
+  useUpdateProductMutation,
 } from '../../../../generated/graphql';
-
-export interface FormData {
-  images: [];
-}
+import { uploadImage } from '../../../../utils/uploadImage';
 
 const initialFormData: FormData = {
   images: [],
 };
 
-const NewProduct = () => {
+const EditProduct = () => {
+  const params = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const { refetch } = useGetProductsQuery();
+  const [getProduct, { data }] = useGetProductLazyQuery();
   const [
-    createProductMutation,
-    { data, loading, error },
-  ] = useCreateProductMutation();
-  console.log(data);
-
-  const fileChangeHandler = (files: any) => {
-    setFormData((data) => ({ ...data, images: files }));
-  };
+    updateProductMutation,
+    { data: dataUpdated, loading, error },
+  ] = useUpdateProductMutation();
+  const { refetch } = useGetProductsQuery();
+  console.log(dataUpdated);
 
   const submitFormHandler = useCallback(
     async (values: any) => {
       const imageUrls = await Promise.all(
         formData.images.map((image: any) => uploadImage(image))
       );
-      const productInput = {
+      const { __typename, ...productInput }: any = {
         ...values,
         images: imageUrls.map((i) => ({ photoLink: i })),
         price: +values.price,
         quantity: +values.quantity,
       };
-      await createProductMutation({ variables: { productInput } });
+      console.log(productInput);
+      await updateProductMutation({ variables: { productInput } });
       await refetch();
       navigate('/admin/products');
     },
     [formData]
   );
 
+  const fileChangeHandler = (files: any) => {
+    setFormData((data) => ({ ...data, images: files }));
+  };
+
+  useEffect(() => {
+    const productId = params.id;
+    if (productId) getProduct({ variables: { productId: productId } });
+  }, []);
+
   return (
-    <div className={classes.newProduct}>
+    <div>
       <Box
         sx={{
           display: 'flex',
@@ -88,6 +84,7 @@ const NewProduct = () => {
         </Box>
       </Box>
       <Form
+        initialValues={{ ...data?.product }}
         onSubmit={submitFormHandler}
         render={({
           handleSubmit,
@@ -106,12 +103,15 @@ const NewProduct = () => {
               }}
             >
               <Typography variant="h2" sx={{ fontSize: '2.3rem' }}>
-                Add product
+                Edit product
               </Typography>
             </Box>
             <Container sx={{ display: 'flex' }}>
               <Navigation />
-              <FormDetail fileChangeHandler={fileChangeHandler} />
+              <FormDetail
+                fileChangeHandler={fileChangeHandler}
+                product={data?.product || undefined}
+              />
               <FormAction />
             </Container>
           </form>
@@ -121,4 +121,4 @@ const NewProduct = () => {
   );
 };
 
-export default NewProduct;
+export default EditProduct;
