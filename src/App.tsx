@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Header from './components/Header';
-import { Routes, Route, useNavigate, To, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, To } from 'react-router-dom';
 import { SearchContextProvider } from './context/SearchContext';
 import { BookmarkContextProvider } from './context/BookmarkContext';
 import NewRecipe from './components/NewRecipe';
@@ -54,34 +54,6 @@ function App() {
     navigate(path);
   };
 
-  const fetchCart = async () => {
-    setCart(await commerce.cart.retrieve());
-  };
-
-  const handleAddToCart = async (productId: number, quantity: number) => {
-    const item = await commerce.cart.add(productId, quantity);
-
-    setCart(item.cart);
-  };
-
-  const handleUpdateCartQty = async (lineItemId: number, quantity: number) => {
-    const response = await commerce.cart.update(lineItemId, { quantity });
-
-    setCart(response.cart);
-  };
-
-  const handleRemoveFromCart = async (lineItemId: number) => {
-    const response = await commerce.cart.remove(lineItemId);
-
-    setCart(response.cart);
-  };
-
-  const handleEmptyCart = async () => {
-    const response = await commerce.cart.empty();
-
-    setCart(response.cart);
-  };
-
   const refreshCart = async () => {
     const newCart = await commerce.cart.refresh();
 
@@ -102,10 +74,6 @@ function App() {
       setErrorMessage(error.data.error.message);
     }
   };
-
-  useEffect(() => {
-    fetchCart();
-  }, []);
 
   return (
     <>
@@ -134,10 +102,7 @@ function App() {
           <BookmarkContextProvider>
             <SearchContextProvider>
               <div className="container">
-                <Header
-                  openNewRecipeHandler={openNewRecipeHandler}
-                  totalItems={cart.total_items}
-                />
+                <Header openNewRecipeHandler={openNewRecipeHandler} />
                 <Routes>
                   <Route path="/" element={<Recipes />} />
                   <Route
@@ -153,7 +118,7 @@ function App() {
                     path="/products"
                     element={
                       <ProtectedRoute>
-                        <Products onAddToCart={handleAddToCart} />
+                        <Products />
                       </ProtectedRoute>
                     }
                   />
@@ -161,12 +126,7 @@ function App() {
                     path="/cart"
                     element={
                       <ProtectedRoute>
-                        <Cart
-                          cart={cart}
-                          onUpdateCartQty={handleUpdateCartQty}
-                          onRemoveFromCart={handleRemoveFromCart}
-                          onEmptyCart={handleEmptyCart}
-                        />
+                        <Cart />
                       </ProtectedRoute>
                     }
                   />

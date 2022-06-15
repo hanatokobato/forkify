@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -16,6 +16,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import logo from '../../images/logo.png';
 import HeaderMenu from './HeaderMenu';
 import LoginButton from '../LoginButton';
+import { useGetCartLazyQuery } from '../../generated/graphql';
+import { AuthContext } from '../../context/AuthContext';
 
 const PREFIX = 'Header';
 
@@ -52,19 +54,23 @@ const Root = styled(AppBar)(({ theme }) => ({
 
 const Header = ({
   openNewRecipeHandler,
-  totalItems,
 }: {
   openNewRecipeHandler: () => void;
-  totalItems: number;
 }) => {
+  const { currentUser } = useContext(AuthContext);
   const { isAuthenticated } = useAuth0();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [getCart, { data: cartData }] = useGetCartLazyQuery();
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => setMobileMoreAnchorEl(null);
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
+
+  useEffect(() => {
+    currentUser && getCart({ variables: { userId: currentUser.id } });
+  }, [currentUser, getCart]);
 
   const renderMobileMenu = (
     <Menu
@@ -83,7 +89,10 @@ const Header = ({
           aria-label="Show cart items"
           color="inherit"
         >
-          <Badge badgeContent={totalItems} color="secondary">
+          <Badge
+            badgeContent={cartData?.cart?.totalItems || 0}
+            color="secondary"
+          >
             <ShoppingCart fontSize="medium" />
           </Badge>
         </IconButton>
@@ -116,7 +125,10 @@ const Header = ({
                   color="inherit"
                   size="medium"
                 >
-                  <Badge badgeContent={totalItems} color="secondary">
+                  <Badge
+                    badgeContent={cartData?.cart?.totalItems || 0}
+                    color="secondary"
+                  >
                     <ShoppingCart fontSize="medium" color="primary" />
                   </Badge>
                 </IconButton>

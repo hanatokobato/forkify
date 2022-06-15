@@ -10,12 +10,12 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { styled } from '@mui/material/styles';
+import { useAddToCartMutation } from '../../generated/graphql';
 
 const PREFIX = 'Product';
 
 interface Props {
   product: Product;
-  onAddToCart: any;
 }
 
 export interface Product {
@@ -56,8 +56,12 @@ const Root = styled(Card)(({ theme }) => ({
   },
 }));
 
-const Product = ({ product, onAddToCart }: Props) => {
-  const handleAddToCart = () => onAddToCart(product.id, 1);
+const Product = ({ product }: Props) => {
+  const [addToCart] = useAddToCartMutation();
+
+  const handleAddToCart = () => {
+    addToCart({ variables: { productId: product.id } });
+  };
 
   return (
     <Root className={classes.root}>

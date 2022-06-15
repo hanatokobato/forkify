@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Container, Typography, Button, Grid, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import CartItem, { Item as LineItem } from './CartItem';
+import {
+  useClearCartMutation,
+  useGetCartLazyQuery,
+} from '../../generated/graphql';
+import { AuthContext } from '../../context/AuthContext';
+import { getDownloadUrl } from '../../utils/uploadImage';
+import { moneyFomattedWithSymbol } from '../../utils/formater';
 
 export interface Cart {
   total_items: number;
@@ -10,13 +17,6 @@ export interface Cart {
   subtotal: {
     formatted_with_symbol: string;
   };
-}
-
-interface Props {
-  cart: Cart;
-  onUpdateCartQty: any;
-  onRemoveFromCart: any;
-  onEmptyCart: any;
 }
 
 const PREFIX = 'Cart';
@@ -62,13 +62,57 @@ const Root = styled(Container)(({ theme }) => ({
   },
 }));
 
-const Cart = ({
-  cart,
-  onUpdateCartQty,
-  onRemoveFromCart,
-  onEmptyCart,
-}: Props) => {
-  const handleEmptyCart = () => onEmptyCart();
+const Cart = () => {
+  const { currentUser } = useContext(AuthContext);
+  const [getCart, { data: cartData, refetch }] = useGetCartLazyQuery();
+  const [clearCart] = useClearCartMutation();
+  const cart = cartData?.cart;
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+
+  const handleEmptyCart = async () => {
+    await clearCart({ variables: { cartId: cartData!.cart!.id } });
+    refetch();
+  };
+
+  const formatLineItems: () => Promise<LineItem[]> = useCallback(async () => {
+    if (cartData) {
+      return await Promise.all(
+        cartData.cart!.lineItems!.map(async (p) => {
+          const url = await getDownloadUrl(p.photo!);
+
+          const formattedItems = {
+            id: +p.id,
+            name: p.name!,
+            quantity: p.quantity,
+            line_total: {
+              formatted_with_symbol: (
+                Math.round(p.lineTotal! * 100) / 100
+              ).toFixed(2),
+            },
+            image: {
+              url,
+            },
+          };
+          return formattedItems;
+        })
+      );
+    } else {
+      return [];
+    }
+  }, [cartData]);
+
+  const storeLineItems = useCallback(async () => {
+    const items = await formatLineItems();
+    setLineItems(items);
+  }, [formatLineItems]);
+
+  useEffect(() => {
+    if (currentUser) getCart({ variables: { userId: currentUser.id } });
+  }, [currentUser, getCart]);
+
+  useEffect(() => {
+    storeLineItems();
+  }, [storeLineItems]);
 
   const renderEmptyCart = () => (
     <Typography variant="subtitle1">
@@ -80,24 +124,20 @@ const Cart = ({
     </Typography>
   );
 
-  if (!cart.line_items) return <div>Loading</div>;
+  if (!cart?.lineItems) return <div>Loading</div>;
 
   const renderCart = () => (
     <>
       <Grid container spacing={3}>
-        {cart.line_items.map((lineItem) => (
+        {lineItems.map((lineItem) => (
           <Grid item xs={12} sm={4} key={lineItem.id}>
-            <CartItem
-              item={lineItem}
-              onUpdateCartQty={onUpdateCartQty}
-              onRemoveFromCart={onRemoveFromCart}
-            />
+            <CartItem item={lineItem} />
           </Grid>
         ))}
       </Grid>
       <div className={classes.cardDetails}>
         <Typography variant="h5" component="h2">
-          Subtotal: {cart.subtotal.formatted_with_symbol}
+          Subtotal: {moneyFomattedWithSymbol(cart.subtotal)}
         </Typography>
         <div>
           <Button
@@ -131,7 +171,7 @@ const Cart = ({
       <Typography className={classes.title} variant="h4" gutterBottom>
         Your Shopping Cart
       </Typography>
-      {!cart.line_items.length ? renderEmptyCart() : renderCart()}
+      {!cart?.lineItems?.length ? renderEmptyCart() : renderCart()}
     </Root>
   );
 };

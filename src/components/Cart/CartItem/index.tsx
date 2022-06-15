@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Typography,
   Button,
@@ -9,6 +9,12 @@ import {
   styled,
   Box,
 } from '@mui/material';
+import {
+  useGetCartQuery,
+  useRemoveCartItemMutation,
+  useUpdateCartQtyMutation,
+} from '../../../generated/graphql';
+import { AuthContext } from '../../../context/AuthContext';
 
 export interface Item {
   id: number;
@@ -24,8 +30,6 @@ export interface Item {
 
 interface Props {
   item: Item;
-  onUpdateCartQty: any;
-  onRemoveFromCart: any;
 }
 
 const PREFIX = 'CartItem';
@@ -61,12 +65,22 @@ const Root = styled(Card)(({ theme }) => ({
   },
 }));
 
-const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }: Props) => {
-  const handleUpdateCartQty = (lineItemId: number, newQuantity: number) =>
-    onUpdateCartQty(lineItemId, newQuantity);
+const CartItem = ({ item }: Props) => {
+  const { currentUser } = useContext(AuthContext);
+  const { refetch } = useGetCartQuery({
+    variables: { userId: currentUser!.id },
+  });
+  const [updateCartQty] = useUpdateCartQtyMutation();
+  const [removeCartItem] = useRemoveCartItemMutation();
 
-  const handleRemoveFromCart = (lineItemId: number) =>
-    onRemoveFromCart(lineItemId);
+  const handleUpdateCartQty = (lineItemId: number, adjustQty: number) => {
+    updateCartQty({ variables: { itemId: lineItemId, adjustQty } });
+  };
+
+  const handleRemoveFromCart = async (lineItemId: number) => {
+    await removeCartItem({ variables: { id: lineItemId } });
+    refetch();
+  };
 
   return (
     <Root className={classes.cardItem}>
@@ -87,7 +101,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }: Props) => {
           <Button
             type="button"
             size="small"
-            onClick={() => handleUpdateCartQty(item.id, item.quantity - 1)}
+            onClick={() => handleUpdateCartQty(item.id, -1)}
           >
             -
           </Button>
@@ -95,7 +109,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }: Props) => {
           <Button
             type="button"
             size="small"
-            onClick={() => handleUpdateCartQty(item.id, item.quantity + 1)}
+            onClick={() => handleUpdateCartQty(item.id, 1)}
           >
             +
           </Button>
