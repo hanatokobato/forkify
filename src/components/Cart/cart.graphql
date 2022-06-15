@@ -1,0 +1,61 @@
+query getCart($userId: Int!) {
+  cart(userId: $userId) {
+    id
+    subtotal
+    totalItems
+    lineItems {
+      lineTotal
+      id
+      name
+      lineTotal
+      photo
+      quantity
+    }
+  }
+}
+
+mutation addToCart($productId: Int!) {
+  addToCart(input: { productId: $productId }) {
+    cart {
+      id
+      lineItems {
+        id
+        lineTotal
+        name
+        photo
+        quantity
+      }
+      subtotal
+      totalItems
+    }
+  }
+}
+
+mutation updateCartQty($itemId: Int!, $adjustQty: Int!) {
+  updateCartQty(input: { adjustQty: $adjustQty, itemId: $itemId }) {
+    cart {
+      id
+      subtotal
+      totalItems
+      lineItems {
+        id
+        lineTotal
+        name
+        photo
+        quantity
+      }
+    }
+  }
+}
+
+mutation removeCartItem($id: bigint!) {
+  delete_cart_items_by_pk(id: $id) {
+    id
+  }
+}
+
+mutation clearCart($cartId: Int!) {
+  delete_cart_items(where: { cart_id: { _eq: $cartId } }) {
+    affected_rows
+  }
+}
