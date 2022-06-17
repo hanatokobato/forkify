@@ -28,6 +28,7 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 export interface JwtToken {
+  exp: number;
   'https://hasura.io/jwt/claims': {
     'x-hasura-default-role': UserTypes;
     'x-hasura-allowed-roles': UserTypes[];

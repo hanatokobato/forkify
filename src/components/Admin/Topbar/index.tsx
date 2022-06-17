@@ -7,12 +7,12 @@ import {
 import React from 'react';
 import classes from './index.module.scss';
 import logo from '../../../images/logo.png';
-import { useAuth0 } from '@auth0/auth0-react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
+import { useLogout } from '../../../utils/auth';
 
 const Topbar = () => {
-  const { logout } = useAuth0();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const logout = useLogout();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,7 +61,7 @@ const Topbar = () => {
               onClose={handleClose}
             >
               <MenuItem
-                onClick={() => logout({ returnTo: window.location.origin })}
+                onClick={logout}
               >
                 Logout
               </MenuItem>
