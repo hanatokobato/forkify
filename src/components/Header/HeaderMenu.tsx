@@ -18,8 +18,8 @@ import {
   Logout,
   OpenInNew,
 } from '@mui/icons-material';
-import { useAuth0 } from '@auth0/auth0-react';
 import Bookmarks from '../Bookmarks';
+import { useLogout } from '../../utils/auth';
 
 const PREFIX = 'HeaderMenu';
 
@@ -52,9 +52,9 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 export default function HeaderMenu({ openNewRecipeHandler }: any) {
-  const { logout } = useAuth0();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const logout = useLogout();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -116,7 +116,7 @@ export default function HeaderMenu({ openNewRecipeHandler }: any) {
           </StyledMenuItem>
         </HtmlTooltip>
         <StyledMenuItem
-          onClick={() => logout({ returnTo: window.location.origin })}
+          onClick={logout}
           className={classes.menuItem}
         >
           <ListItemIcon>

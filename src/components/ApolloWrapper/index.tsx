@@ -1,15 +1,15 @@
 import { ApolloProvider } from '@apollo/client';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import makeApolloClient from '../../apollo';
-import { getCachedUser } from '../../utils/auth';
+import { AuthContext } from '../../context/AuthContext';
 
 interface Props {
   children: React.ReactNode;
 }
 
 const ApolloWrapper = (props: Props) => {
-  const { token } = getCachedUser();
-  const client = makeApolloClient(token);
+  const { currentUser } = useContext(AuthContext);
+  const client = makeApolloClient(currentUser?.token);
 
   return <ApolloProvider client={client}>{props.children}</ApolloProvider>;
 };
