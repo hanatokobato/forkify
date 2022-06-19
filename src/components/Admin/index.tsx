@@ -7,6 +7,7 @@ import ProductList from './Products';
 import NewProduct from './Products/NewProduct';
 import { Box } from '@mui/material';
 import EditProduct from './Products/EditProduct';
+import Countries from './Countries';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Admin = () => {
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/new" element={<NewProduct />} />
             <Route path="/products/:id/edit" element={<EditProduct />} />
+            <Route path="/countries" element={<Countries />} />
           </Routes>
         </Box>
       </div>

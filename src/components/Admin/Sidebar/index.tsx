@@ -1,16 +1,8 @@
 import {
   LineStyle,
-  Timeline,
-  TrendingUp,
   PermIdentity,
   Storefront,
-  AttachMoney,
-  BarChart,
-  MailOutline,
-  DynamicFeed,
-  ChatBubbleOutline,
-  WorkOutline,
-  Report,
+  Public,
 } from '@mui/icons-material';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -58,6 +50,16 @@ const Sidebar = () => {
               >
                 <Storefront className={classes.sidebarIcon} />
                 Products
+              </li>
+            </Link>
+            <Link to="/admin/countries" className={classes.link}>
+              <li
+                className={`${classes.sidebarListItem} ${
+                  location.pathname === '/admin/countries' ? classes.active : ''
+                }`}
+              >
+                <Public className={classes.sidebarIcon} />
+                Countries
               </li>
             </Link>
           </ul>

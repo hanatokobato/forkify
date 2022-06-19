@@ -1,0 +1,14 @@
+query getCheckoutCountries {
+  countries {
+    id
+    name
+    abbreviation
+  }
+}
+
+query getCheckoutStates($countryId: Int!) {
+  states(where: { country_id: { _eq: $countryId } }) {
+    id
+    name
+  }
+}

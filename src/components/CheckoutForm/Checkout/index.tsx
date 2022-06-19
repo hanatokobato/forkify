@@ -101,7 +101,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }: any) => {
 
           setCheckoutToken(token);
         } catch {
-          if (activeStep !== steps.length) navigate('/producs');
+          if (activeStep !== steps.length) navigate('/products');
         }
       };
 
@@ -179,11 +179,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }: any) => {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? (
-            <Confirmation />
-          ) : (
-            checkoutToken && <Form />
-          )}
+          {activeStep === steps.length ? <Confirmation /> : <Form />}
         </Paper>
       </Root>
     </div>
