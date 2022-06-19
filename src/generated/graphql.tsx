@@ -510,6 +510,249 @@ export type Cart_Items_Variance_Fields = {
   user_id?: Maybe<Scalars['Float']>;
 };
 
+/** columns and relationships of "countries" */
+export type Countries = {
+  __typename?: 'countries';
+  abbreviation?: Maybe<Scalars['String']>;
+  active?: Maybe<Scalars['Boolean']>;
+  created_at: Scalars['timestamp'];
+  id: Scalars['bigint'];
+  name?: Maybe<Scalars['String']>;
+  /** An array relationship */
+  states: Array<States>;
+  /** An aggregate relationship */
+  states_aggregate: States_Aggregate;
+  updated_at: Scalars['timestamp'];
+};
+
+
+/** columns and relationships of "countries" */
+export type CountriesStatesArgs = {
+  distinct_on?: InputMaybe<Array<States_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<States_Order_By>>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+
+/** columns and relationships of "countries" */
+export type CountriesStates_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<States_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<States_Order_By>>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+/** aggregated selection of "countries" */
+export type Countries_Aggregate = {
+  __typename?: 'countries_aggregate';
+  aggregate?: Maybe<Countries_Aggregate_Fields>;
+  nodes: Array<Countries>;
+};
+
+/** aggregate fields of "countries" */
+export type Countries_Aggregate_Fields = {
+  __typename?: 'countries_aggregate_fields';
+  avg?: Maybe<Countries_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Countries_Max_Fields>;
+  min?: Maybe<Countries_Min_Fields>;
+  stddev?: Maybe<Countries_Stddev_Fields>;
+  stddev_pop?: Maybe<Countries_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Countries_Stddev_Samp_Fields>;
+  sum?: Maybe<Countries_Sum_Fields>;
+  var_pop?: Maybe<Countries_Var_Pop_Fields>;
+  var_samp?: Maybe<Countries_Var_Samp_Fields>;
+  variance?: Maybe<Countries_Variance_Fields>;
+};
+
+
+/** aggregate fields of "countries" */
+export type Countries_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Countries_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Countries_Avg_Fields = {
+  __typename?: 'countries_avg_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "countries". All fields are combined with a logical 'AND'. */
+export type Countries_Bool_Exp = {
+  _and?: InputMaybe<Array<Countries_Bool_Exp>>;
+  _not?: InputMaybe<Countries_Bool_Exp>;
+  _or?: InputMaybe<Array<Countries_Bool_Exp>>;
+  abbreviation?: InputMaybe<String_Comparison_Exp>;
+  active?: InputMaybe<Boolean_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  id?: InputMaybe<Bigint_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  states?: InputMaybe<States_Bool_Exp>;
+  updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "countries" */
+export enum Countries_Constraint {
+  /** unique or primary key constraint */
+  CountriesPkey = 'countries_pkey'
+}
+
+/** input type for incrementing numeric columns in table "countries" */
+export type Countries_Inc_Input = {
+  id?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "countries" */
+export type Countries_Insert_Input = {
+  abbreviation?: InputMaybe<Scalars['String']>;
+  active?: InputMaybe<Scalars['Boolean']>;
+  created_at?: InputMaybe<Scalars['timestamp']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  name?: InputMaybe<Scalars['String']>;
+  states?: InputMaybe<States_Arr_Rel_Insert_Input>;
+  updated_at?: InputMaybe<Scalars['timestamp']>;
+};
+
+/** aggregate max on columns */
+export type Countries_Max_Fields = {
+  __typename?: 'countries_max_fields';
+  abbreviation?: Maybe<Scalars['String']>;
+  created_at?: Maybe<Scalars['timestamp']>;
+  id?: Maybe<Scalars['bigint']>;
+  name?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamp']>;
+};
+
+/** aggregate min on columns */
+export type Countries_Min_Fields = {
+  __typename?: 'countries_min_fields';
+  abbreviation?: Maybe<Scalars['String']>;
+  created_at?: Maybe<Scalars['timestamp']>;
+  id?: Maybe<Scalars['bigint']>;
+  name?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamp']>;
+};
+
+/** response of any mutation on the table "countries" */
+export type Countries_Mutation_Response = {
+  __typename?: 'countries_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Countries>;
+};
+
+/** on_conflict condition type for table "countries" */
+export type Countries_On_Conflict = {
+  constraint: Countries_Constraint;
+  update_columns?: Array<Countries_Update_Column>;
+  where?: InputMaybe<Countries_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "countries". */
+export type Countries_Order_By = {
+  abbreviation?: InputMaybe<Order_By>;
+  active?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  states_aggregate?: InputMaybe<States_Aggregate_Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: countries */
+export type Countries_Pk_Columns_Input = {
+  id: Scalars['bigint'];
+};
+
+/** select columns of table "countries" */
+export enum Countries_Select_Column {
+  /** column name */
+  Abbreviation = 'abbreviation',
+  /** column name */
+  Active = 'active',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "countries" */
+export type Countries_Set_Input = {
+  abbreviation?: InputMaybe<Scalars['String']>;
+  active?: InputMaybe<Scalars['Boolean']>;
+  created_at?: InputMaybe<Scalars['timestamp']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamp']>;
+};
+
+/** aggregate stddev on columns */
+export type Countries_Stddev_Fields = {
+  __typename?: 'countries_stddev_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Countries_Stddev_Pop_Fields = {
+  __typename?: 'countries_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Countries_Stddev_Samp_Fields = {
+  __typename?: 'countries_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Countries_Sum_Fields = {
+  __typename?: 'countries_sum_fields';
+  id?: Maybe<Scalars['bigint']>;
+};
+
+/** update columns of table "countries" */
+export enum Countries_Update_Column {
+  /** column name */
+  Abbreviation = 'abbreviation',
+  /** column name */
+  Active = 'active',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** aggregate var_pop on columns */
+export type Countries_Var_Pop_Fields = {
+  __typename?: 'countries_var_pop_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Countries_Var_Samp_Fields = {
+  __typename?: 'countries_var_samp_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Countries_Variance_Fields = {
+  __typename?: 'countries_variance_fields';
+  id?: Maybe<Scalars['Float']>;
+};
+
 /** columns and relationships of "ingredients" */
 export type Ingredients = {
   __typename?: 'ingredients';
@@ -867,6 +1110,10 @@ export type Mutation_Root = {
   delete_cart_items?: Maybe<Cart_Items_Mutation_Response>;
   /** delete single row from the table: "cart_items" */
   delete_cart_items_by_pk?: Maybe<Cart_Items>;
+  /** delete data from the table: "countries" */
+  delete_countries?: Maybe<Countries_Mutation_Response>;
+  /** delete single row from the table: "countries" */
+  delete_countries_by_pk?: Maybe<Countries>;
   /** delete data from the table: "ingredients" */
   delete_ingredients?: Maybe<Ingredients_Mutation_Response>;
   /** delete single row from the table: "ingredients" */
@@ -879,6 +1126,10 @@ export type Mutation_Root = {
   delete_recipes?: Maybe<Recipes_Mutation_Response>;
   /** delete single row from the table: "recipes" */
   delete_recipes_by_pk?: Maybe<Recipes>;
+  /** delete data from the table: "states" */
+  delete_states?: Maybe<States_Mutation_Response>;
+  /** delete single row from the table: "states" */
+  delete_states_by_pk?: Maybe<States>;
   /** delete data from the table: "users" */
   delete_users?: Maybe<Users_Mutation_Response>;
   /** delete single row from the table: "users" */
@@ -887,6 +1138,10 @@ export type Mutation_Root = {
   insert_cart_items?: Maybe<Cart_Items_Mutation_Response>;
   /** insert a single row into the table: "cart_items" */
   insert_cart_items_one?: Maybe<Cart_Items>;
+  /** insert data into the table: "countries" */
+  insert_countries?: Maybe<Countries_Mutation_Response>;
+  /** insert a single row into the table: "countries" */
+  insert_countries_one?: Maybe<Countries>;
   /** insert data into the table: "ingredients" */
   insert_ingredients?: Maybe<Ingredients_Mutation_Response>;
   /** insert a single row into the table: "ingredients" */
@@ -899,6 +1154,10 @@ export type Mutation_Root = {
   insert_recipes?: Maybe<Recipes_Mutation_Response>;
   /** insert a single row into the table: "recipes" */
   insert_recipes_one?: Maybe<Recipes>;
+  /** insert data into the table: "states" */
+  insert_states?: Maybe<States_Mutation_Response>;
+  /** insert a single row into the table: "states" */
+  insert_states_one?: Maybe<States>;
   /** insert data into the table: "users" */
   insert_users?: Maybe<Users_Mutation_Response>;
   /** insert a single row into the table: "users" */
@@ -909,6 +1168,10 @@ export type Mutation_Root = {
   update_cart_items?: Maybe<Cart_Items_Mutation_Response>;
   /** update single row of the table: "cart_items" */
   update_cart_items_by_pk?: Maybe<Cart_Items>;
+  /** update data of the table: "countries" */
+  update_countries?: Maybe<Countries_Mutation_Response>;
+  /** update single row of the table: "countries" */
+  update_countries_by_pk?: Maybe<Countries>;
   /** update data of the table: "ingredients" */
   update_ingredients?: Maybe<Ingredients_Mutation_Response>;
   /** update single row of the table: "ingredients" */
@@ -921,6 +1184,10 @@ export type Mutation_Root = {
   update_recipes?: Maybe<Recipes_Mutation_Response>;
   /** update single row of the table: "recipes" */
   update_recipes_by_pk?: Maybe<Recipes>;
+  /** update data of the table: "states" */
+  update_states?: Maybe<States_Mutation_Response>;
+  /** update single row of the table: "states" */
+  update_states_by_pk?: Maybe<States>;
   /** update data of the table: "users" */
   update_users?: Maybe<Users_Mutation_Response>;
   /** update single row of the table: "users" */
@@ -954,6 +1221,18 @@ export type Mutation_RootDelete_Cart_ItemsArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Cart_Items_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_CountriesArgs = {
+  where: Countries_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Countries_By_PkArgs = {
   id: Scalars['bigint'];
 };
 
@@ -995,6 +1274,18 @@ export type Mutation_RootDelete_Recipes_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_StatesArgs = {
+  where: States_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_States_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_UsersArgs = {
   where: Users_Bool_Exp;
 };
@@ -1017,6 +1308,20 @@ export type Mutation_RootInsert_Cart_ItemsArgs = {
 export type Mutation_RootInsert_Cart_Items_OneArgs = {
   object: Cart_Items_Insert_Input;
   on_conflict?: InputMaybe<Cart_Items_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_CountriesArgs = {
+  objects: Array<Countries_Insert_Input>;
+  on_conflict?: InputMaybe<Countries_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Countries_OneArgs = {
+  object: Countries_Insert_Input;
+  on_conflict?: InputMaybe<Countries_On_Conflict>;
 };
 
 
@@ -1063,6 +1368,20 @@ export type Mutation_RootInsert_Recipes_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_StatesArgs = {
+  objects: Array<States_Insert_Input>;
+  on_conflict?: InputMaybe<States_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_States_OneArgs = {
+  object: States_Insert_Input;
+  on_conflict?: InputMaybe<States_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_UsersArgs = {
   objects: Array<Users_Insert_Input>;
   on_conflict?: InputMaybe<Users_On_Conflict>;
@@ -1101,6 +1420,22 @@ export type Mutation_RootUpdate_Cart_Items_By_PkArgs = {
   _inc?: InputMaybe<Cart_Items_Inc_Input>;
   _set?: InputMaybe<Cart_Items_Set_Input>;
   pk_columns: Cart_Items_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_CountriesArgs = {
+  _inc?: InputMaybe<Countries_Inc_Input>;
+  _set?: InputMaybe<Countries_Set_Input>;
+  where: Countries_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Countries_By_PkArgs = {
+  _inc?: InputMaybe<Countries_Inc_Input>;
+  _set?: InputMaybe<Countries_Set_Input>;
+  pk_columns: Countries_Pk_Columns_Input;
 };
 
 
@@ -1149,6 +1484,22 @@ export type Mutation_RootUpdate_Recipes_By_PkArgs = {
   _inc?: InputMaybe<Recipes_Inc_Input>;
   _set?: InputMaybe<Recipes_Set_Input>;
   pk_columns: Recipes_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_StatesArgs = {
+  _inc?: InputMaybe<States_Inc_Input>;
+  _set?: InputMaybe<States_Set_Input>;
+  where: States_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_States_By_PkArgs = {
+  _inc?: InputMaybe<States_Inc_Input>;
+  _set?: InputMaybe<States_Set_Input>;
+  pk_columns: States_Pk_Columns_Input;
 };
 
 
@@ -1205,6 +1556,12 @@ export type Query_Root = {
   cart_items_aggregate: Cart_Items_Aggregate;
   /** fetch data from the table: "cart_items" using primary key columns */
   cart_items_by_pk?: Maybe<Cart_Items>;
+  /** fetch data from the table: "countries" */
+  countries: Array<Countries>;
+  /** fetch aggregated fields from the table: "countries" */
+  countries_aggregate: Countries_Aggregate;
+  /** fetch data from the table: "countries" using primary key columns */
+  countries_by_pk?: Maybe<Countries>;
   /** An array relationship */
   ingredients: Array<Ingredients>;
   /** An aggregate relationship */
@@ -1225,6 +1582,12 @@ export type Query_Root = {
   recipes_aggregate: Recipes_Aggregate;
   /** fetch data from the table: "recipes" using primary key columns */
   recipes_by_pk?: Maybe<Recipes>;
+  /** An array relationship */
+  states: Array<States>;
+  /** An aggregate relationship */
+  states_aggregate: States_Aggregate;
+  /** fetch data from the table: "states" using primary key columns */
+  states_by_pk?: Maybe<States>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -1258,6 +1621,29 @@ export type Query_RootCart_Items_AggregateArgs = {
 
 
 export type Query_RootCart_Items_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Query_RootCountriesArgs = {
+  distinct_on?: InputMaybe<Array<Countries_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Countries_Order_By>>;
+  where?: InputMaybe<Countries_Bool_Exp>;
+};
+
+
+export type Query_RootCountries_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Countries_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Countries_Order_By>>;
+  where?: InputMaybe<Countries_Bool_Exp>;
+};
+
+
+export type Query_RootCountries_By_PkArgs = {
   id: Scalars['bigint'];
 };
 
@@ -1332,6 +1718,29 @@ export type Query_RootRecipes_AggregateArgs = {
 
 
 export type Query_RootRecipes_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Query_RootStatesArgs = {
+  distinct_on?: InputMaybe<Array<States_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<States_Order_By>>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+
+export type Query_RootStates_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<States_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<States_Order_By>>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+
+export type Query_RootStates_By_PkArgs = {
   id: Scalars['bigint'];
 };
 
@@ -2030,6 +2439,336 @@ export type Recipes_Variance_Fields = {
   user_id?: Maybe<Scalars['Float']>;
 };
 
+/** columns and relationships of "states" */
+export type States = {
+  __typename?: 'states';
+  abbreviation: Scalars['String'];
+  country_id: Scalars['Int'];
+  created_at: Scalars['timestamp'];
+  described_as?: Maybe<Scalars['String']>;
+  id: Scalars['bigint'];
+  name: Scalars['String'];
+  updated_at: Scalars['timestamp'];
+};
+
+/** aggregated selection of "states" */
+export type States_Aggregate = {
+  __typename?: 'states_aggregate';
+  aggregate?: Maybe<States_Aggregate_Fields>;
+  nodes: Array<States>;
+};
+
+/** aggregate fields of "states" */
+export type States_Aggregate_Fields = {
+  __typename?: 'states_aggregate_fields';
+  avg?: Maybe<States_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<States_Max_Fields>;
+  min?: Maybe<States_Min_Fields>;
+  stddev?: Maybe<States_Stddev_Fields>;
+  stddev_pop?: Maybe<States_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<States_Stddev_Samp_Fields>;
+  sum?: Maybe<States_Sum_Fields>;
+  var_pop?: Maybe<States_Var_Pop_Fields>;
+  var_samp?: Maybe<States_Var_Samp_Fields>;
+  variance?: Maybe<States_Variance_Fields>;
+};
+
+
+/** aggregate fields of "states" */
+export type States_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<States_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "states" */
+export type States_Aggregate_Order_By = {
+  avg?: InputMaybe<States_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<States_Max_Order_By>;
+  min?: InputMaybe<States_Min_Order_By>;
+  stddev?: InputMaybe<States_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<States_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<States_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<States_Sum_Order_By>;
+  var_pop?: InputMaybe<States_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<States_Var_Samp_Order_By>;
+  variance?: InputMaybe<States_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "states" */
+export type States_Arr_Rel_Insert_Input = {
+  data: Array<States_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<States_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type States_Avg_Fields = {
+  __typename?: 'states_avg_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "states" */
+export type States_Avg_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "states". All fields are combined with a logical 'AND'. */
+export type States_Bool_Exp = {
+  _and?: InputMaybe<Array<States_Bool_Exp>>;
+  _not?: InputMaybe<States_Bool_Exp>;
+  _or?: InputMaybe<Array<States_Bool_Exp>>;
+  abbreviation?: InputMaybe<String_Comparison_Exp>;
+  country_id?: InputMaybe<Int_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamp_Comparison_Exp>;
+  described_as?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Bigint_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamp_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "states" */
+export enum States_Constraint {
+  /** unique or primary key constraint */
+  StatesPkey = 'states_pkey'
+}
+
+/** input type for incrementing numeric columns in table "states" */
+export type States_Inc_Input = {
+  country_id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "states" */
+export type States_Insert_Input = {
+  abbreviation?: InputMaybe<Scalars['String']>;
+  country_id?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamp']>;
+  described_as?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamp']>;
+};
+
+/** aggregate max on columns */
+export type States_Max_Fields = {
+  __typename?: 'states_max_fields';
+  abbreviation?: Maybe<Scalars['String']>;
+  country_id?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamp']>;
+  described_as?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['bigint']>;
+  name?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamp']>;
+};
+
+/** order by max() on columns of table "states" */
+export type States_Max_Order_By = {
+  abbreviation?: InputMaybe<Order_By>;
+  country_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  described_as?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type States_Min_Fields = {
+  __typename?: 'states_min_fields';
+  abbreviation?: Maybe<Scalars['String']>;
+  country_id?: Maybe<Scalars['Int']>;
+  created_at?: Maybe<Scalars['timestamp']>;
+  described_as?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['bigint']>;
+  name?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['timestamp']>;
+};
+
+/** order by min() on columns of table "states" */
+export type States_Min_Order_By = {
+  abbreviation?: InputMaybe<Order_By>;
+  country_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  described_as?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "states" */
+export type States_Mutation_Response = {
+  __typename?: 'states_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<States>;
+};
+
+/** on_conflict condition type for table "states" */
+export type States_On_Conflict = {
+  constraint: States_Constraint;
+  update_columns?: Array<States_Update_Column>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "states". */
+export type States_Order_By = {
+  abbreviation?: InputMaybe<Order_By>;
+  country_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  described_as?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: states */
+export type States_Pk_Columns_Input = {
+  id: Scalars['bigint'];
+};
+
+/** select columns of table "states" */
+export enum States_Select_Column {
+  /** column name */
+  Abbreviation = 'abbreviation',
+  /** column name */
+  CountryId = 'country_id',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DescribedAs = 'described_as',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "states" */
+export type States_Set_Input = {
+  abbreviation?: InputMaybe<Scalars['String']>;
+  country_id?: InputMaybe<Scalars['Int']>;
+  created_at?: InputMaybe<Scalars['timestamp']>;
+  described_as?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['bigint']>;
+  name?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamp']>;
+};
+
+/** aggregate stddev on columns */
+export type States_Stddev_Fields = {
+  __typename?: 'states_stddev_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "states" */
+export type States_Stddev_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type States_Stddev_Pop_Fields = {
+  __typename?: 'states_stddev_pop_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "states" */
+export type States_Stddev_Pop_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type States_Stddev_Samp_Fields = {
+  __typename?: 'states_stddev_samp_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "states" */
+export type States_Stddev_Samp_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type States_Sum_Fields = {
+  __typename?: 'states_sum_fields';
+  country_id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['bigint']>;
+};
+
+/** order by sum() on columns of table "states" */
+export type States_Sum_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "states" */
+export enum States_Update_Column {
+  /** column name */
+  Abbreviation = 'abbreviation',
+  /** column name */
+  CountryId = 'country_id',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  DescribedAs = 'described_as',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** aggregate var_pop on columns */
+export type States_Var_Pop_Fields = {
+  __typename?: 'states_var_pop_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "states" */
+export type States_Var_Pop_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type States_Var_Samp_Fields = {
+  __typename?: 'states_var_samp_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "states" */
+export type States_Var_Samp_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type States_Variance_Fields = {
+  __typename?: 'states_variance_fields';
+  country_id?: Maybe<Scalars['Float']>;
+  id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "states" */
+export type States_Variance_Order_By = {
+  country_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+};
+
 export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** fetch data from the table: "cart_items" */
@@ -2038,6 +2777,12 @@ export type Subscription_Root = {
   cart_items_aggregate: Cart_Items_Aggregate;
   /** fetch data from the table: "cart_items" using primary key columns */
   cart_items_by_pk?: Maybe<Cart_Items>;
+  /** fetch data from the table: "countries" */
+  countries: Array<Countries>;
+  /** fetch aggregated fields from the table: "countries" */
+  countries_aggregate: Countries_Aggregate;
+  /** fetch data from the table: "countries" using primary key columns */
+  countries_by_pk?: Maybe<Countries>;
   /** An array relationship */
   ingredients: Array<Ingredients>;
   /** An aggregate relationship */
@@ -2056,6 +2801,12 @@ export type Subscription_Root = {
   recipes_aggregate: Recipes_Aggregate;
   /** fetch data from the table: "recipes" using primary key columns */
   recipes_by_pk?: Maybe<Recipes>;
+  /** An array relationship */
+  states: Array<States>;
+  /** An aggregate relationship */
+  states_aggregate: States_Aggregate;
+  /** fetch data from the table: "states" using primary key columns */
+  states_by_pk?: Maybe<States>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -2084,6 +2835,29 @@ export type Subscription_RootCart_Items_AggregateArgs = {
 
 
 export type Subscription_RootCart_Items_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Subscription_RootCountriesArgs = {
+  distinct_on?: InputMaybe<Array<Countries_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Countries_Order_By>>;
+  where?: InputMaybe<Countries_Bool_Exp>;
+};
+
+
+export type Subscription_RootCountries_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Countries_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Countries_Order_By>>;
+  where?: InputMaybe<Countries_Bool_Exp>;
+};
+
+
+export type Subscription_RootCountries_By_PkArgs = {
   id: Scalars['bigint'];
 };
 
@@ -2153,6 +2927,29 @@ export type Subscription_RootRecipes_AggregateArgs = {
 
 
 export type Subscription_RootRecipes_By_PkArgs = {
+  id: Scalars['bigint'];
+};
+
+
+export type Subscription_RootStatesArgs = {
+  distinct_on?: InputMaybe<Array<States_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<States_Order_By>>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+
+export type Subscription_RootStates_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<States_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<States_Order_By>>;
+  where?: InputMaybe<States_Bool_Exp>;
+};
+
+
+export type Subscription_RootStates_By_PkArgs = {
   id: Scalars['bigint'];
 };
 
@@ -2457,6 +3254,22 @@ export type Users_Variance_Fields = {
   id?: Maybe<Scalars['Float']>;
 };
 
+export type GetCountriesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetCountriesQuery = { __typename?: 'query_root', countries_aggregate: { __typename?: 'countries_aggregate', aggregate?: { __typename?: 'countries_aggregate_fields', count: number } | null }, countries: Array<{ __typename?: 'countries', abbreviation?: string | null, active?: boolean | null, id: any, name?: string | null }> };
+
+export type UpdateActiveMutationVariables = Exact<{
+  id: Scalars['bigint'];
+  active?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type UpdateActiveMutation = { __typename?: 'mutation_root', update_countries_by_pk?: { __typename?: 'countries', active?: boolean | null, id: any } | null };
+
 export type CreateProductMutationVariables = Exact<{
   productInput: CreateProductInput;
 }>;
@@ -2552,6 +3365,18 @@ export type ClearCartMutationVariables = Exact<{
 
 export type ClearCartMutation = { __typename?: 'mutation_root', delete_cart_items?: { __typename?: 'cart_items_mutation_response', affected_rows: number } | null };
 
+export type GetCheckoutCountriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCheckoutCountriesQuery = { __typename?: 'query_root', countries: Array<{ __typename?: 'countries', id: any, name?: string | null, abbreviation?: string | null }> };
+
+export type GetCheckoutStatesQueryVariables = Exact<{
+  countryId: Scalars['Int'];
+}>;
+
+
+export type GetCheckoutStatesQuery = { __typename?: 'query_root', states: Array<{ __typename?: 'states', id: any, name: string }> };
+
 export type RecipeQueryVariables = Exact<{
   id: Scalars['bigint'];
 }>;
@@ -2574,6 +3399,85 @@ export type SearchedRecipesQueryVariables = Exact<{
 export type SearchedRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', id: any, user_id?: any | null, title?: string | null, publisher?: string | null, image_url?: string | null }> };
 
 
+export const GetCountriesDocument = gql`
+    query getCountries($limit: Int = 10, $offset: Int = 0) {
+  countries_aggregate {
+    aggregate {
+      count
+    }
+  }
+  countries(limit: $limit, offset: $offset) {
+    abbreviation
+    active
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCountriesQuery__
+ *
+ * To run a query within a React component, call `useGetCountriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCountriesQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useGetCountriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCountriesQuery, GetCountriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCountriesQuery, GetCountriesQueryVariables>(GetCountriesDocument, options);
+      }
+export function useGetCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCountriesQuery, GetCountriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCountriesQuery, GetCountriesQueryVariables>(GetCountriesDocument, options);
+        }
+export type GetCountriesQueryHookResult = ReturnType<typeof useGetCountriesQuery>;
+export type GetCountriesLazyQueryHookResult = ReturnType<typeof useGetCountriesLazyQuery>;
+export type GetCountriesQueryResult = Apollo.QueryResult<GetCountriesQuery, GetCountriesQueryVariables>;
+export const UpdateActiveDocument = gql`
+    mutation updateActive($id: bigint!, $active: Boolean) {
+  update_countries_by_pk(pk_columns: {id: $id}, _set: {active: $active}) {
+    active
+    id
+  }
+}
+    `;
+export type UpdateActiveMutationFn = Apollo.MutationFunction<UpdateActiveMutation, UpdateActiveMutationVariables>;
+
+/**
+ * __useUpdateActiveMutation__
+ *
+ * To run a mutation, you first call `useUpdateActiveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateActiveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateActiveMutation, { data, loading, error }] = useUpdateActiveMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      active: // value for 'active'
+ *   },
+ * });
+ */
+export function useUpdateActiveMutation(baseOptions?: Apollo.MutationHookOptions<UpdateActiveMutation, UpdateActiveMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateActiveMutation, UpdateActiveMutationVariables>(UpdateActiveDocument, options);
+      }
+export type UpdateActiveMutationHookResult = ReturnType<typeof useUpdateActiveMutation>;
+export type UpdateActiveMutationResult = Apollo.MutationResult<UpdateActiveMutation>;
+export type UpdateActiveMutationOptions = Apollo.BaseMutationOptions<UpdateActiveMutation, UpdateActiveMutationVariables>;
 export const CreateProductDocument = gql`
     mutation createProduct($productInput: CreateProductInput!) {
   createProduct(input: $productInput) {
@@ -3117,6 +4021,78 @@ export function useClearCartMutation(baseOptions?: Apollo.MutationHookOptions<Cl
 export type ClearCartMutationHookResult = ReturnType<typeof useClearCartMutation>;
 export type ClearCartMutationResult = Apollo.MutationResult<ClearCartMutation>;
 export type ClearCartMutationOptions = Apollo.BaseMutationOptions<ClearCartMutation, ClearCartMutationVariables>;
+export const GetCheckoutCountriesDocument = gql`
+    query getCheckoutCountries {
+  countries {
+    id
+    name
+    abbreviation
+  }
+}
+    `;
+
+/**
+ * __useGetCheckoutCountriesQuery__
+ *
+ * To run a query within a React component, call `useGetCheckoutCountriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCheckoutCountriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCheckoutCountriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCheckoutCountriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCheckoutCountriesQuery, GetCheckoutCountriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCheckoutCountriesQuery, GetCheckoutCountriesQueryVariables>(GetCheckoutCountriesDocument, options);
+      }
+export function useGetCheckoutCountriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCheckoutCountriesQuery, GetCheckoutCountriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCheckoutCountriesQuery, GetCheckoutCountriesQueryVariables>(GetCheckoutCountriesDocument, options);
+        }
+export type GetCheckoutCountriesQueryHookResult = ReturnType<typeof useGetCheckoutCountriesQuery>;
+export type GetCheckoutCountriesLazyQueryHookResult = ReturnType<typeof useGetCheckoutCountriesLazyQuery>;
+export type GetCheckoutCountriesQueryResult = Apollo.QueryResult<GetCheckoutCountriesQuery, GetCheckoutCountriesQueryVariables>;
+export const GetCheckoutStatesDocument = gql`
+    query getCheckoutStates($countryId: Int!) {
+  states(where: {country_id: {_eq: $countryId}}) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCheckoutStatesQuery__
+ *
+ * To run a query within a React component, call `useGetCheckoutStatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCheckoutStatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCheckoutStatesQuery({
+ *   variables: {
+ *      countryId: // value for 'countryId'
+ *   },
+ * });
+ */
+export function useGetCheckoutStatesQuery(baseOptions: Apollo.QueryHookOptions<GetCheckoutStatesQuery, GetCheckoutStatesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCheckoutStatesQuery, GetCheckoutStatesQueryVariables>(GetCheckoutStatesDocument, options);
+      }
+export function useGetCheckoutStatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCheckoutStatesQuery, GetCheckoutStatesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCheckoutStatesQuery, GetCheckoutStatesQueryVariables>(GetCheckoutStatesDocument, options);
+        }
+export type GetCheckoutStatesQueryHookResult = ReturnType<typeof useGetCheckoutStatesQuery>;
+export type GetCheckoutStatesLazyQueryHookResult = ReturnType<typeof useGetCheckoutStatesLazyQuery>;
+export type GetCheckoutStatesQueryResult = Apollo.QueryResult<GetCheckoutStatesQuery, GetCheckoutStatesQueryVariables>;
 export const RecipeDocument = gql`
     query Recipe($id: bigint!) {
   recipes_by_pk(id: $id) {

@@ -1,0 +1,20 @@
+query getCountries($limit: Int = 10, $offset: Int = 0) {
+  countries_aggregate {
+    aggregate {
+      count
+    }
+  }
+  countries(limit: $limit, offset: $offset) {
+    abbreviation
+    active
+    id
+    name
+  }
+}
+
+mutation updateActive($id: bigint!, $active: Boolean) {
+  update_countries_by_pk(pk_columns: { id: $id }, _set: { active: $active }) {
+    active
+    id
+  }
+}

@@ -125,12 +125,7 @@ const Products = () => {
         </Box>
       </Box>
       <Box sx={{ height: 400, width: '100%', backgroundColor: '#fff' }}>
-        <DataGrid
-          rows={products}
-          disableSelectionOnClick
-          columns={columns}
-          checkboxSelection
-        />
+        <DataGrid rows={products} disableSelectionOnClick columns={columns} />
       </Box>
     </>
   );
