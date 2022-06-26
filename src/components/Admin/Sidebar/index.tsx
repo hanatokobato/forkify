@@ -3,13 +3,34 @@ import {
   PermIdentity,
   Storefront,
   Public,
+  SettingsApplications,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
 } from '@mui/icons-material';
-import React from 'react';
+import { Box, Collapse } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import classes from './index.module.scss';
 
+interface CollapseMenu {
+  settings: boolean;
+}
+
+const initCollapseMenu = {
+  settings: false,
+};
+
 const Sidebar = () => {
   const location = useLocation();
+  const [collapseMenu, setCollapseMenu] = useState<CollapseMenu>(
+    initCollapseMenu
+  );
+
+  const handleCollapseMenu = useCallback((menuType: 'settings') => {
+    setCollapseMenu((prev) => {
+      return { ...prev, [menuType]: !prev[menuType] };
+    });
+  }, []);
 
   return (
     <div className={classes.sidebar}>
@@ -62,6 +83,39 @@ const Sidebar = () => {
                 Countries
               </li>
             </Link>
+            <a
+              className={classes.link}
+              onClick={() => handleCollapseMenu('settings')}
+            >
+              <li
+                className={`${classes.sidebarListItem} ${classes.sidebarListItemCollapse}`}
+              >
+                <Box sx={{ display: 'flex' }}>
+                  <SettingsApplications className={classes.sidebarIcon} />
+                  Settings
+                </Box>
+                {collapseMenu.settings ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )}
+              </li>
+            </a>
+            <Collapse in={collapseMenu.settings}>
+              <Link to="/admin/settings/shipping" className={classes.link}>
+                <li
+                  className={`${classes.sidebarListItem} ${
+                    classes.sidebarListItemChild
+                  } ${
+                    location.pathname === '/admin/settings/shipping'
+                      ? classes.active
+                      : ''
+                  }`}
+                >
+                  Shipping
+                </li>
+              </Link>
+            </Collapse>
           </ul>
         </div>
       </div>

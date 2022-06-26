@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import icons from '../../images/icons.svg';
 import { BookmarkContext } from '../../context/BookmarkContext';
 import { useRecipeLazyQuery } from '../../generated/graphql';
+import { AuthContext } from '../../context/AuthContext';
 
 export interface RecipeData {
   id: string;
@@ -22,6 +23,7 @@ function Recipe() {
   const [fetchRecipe, { loading: isLoading, error }] = useRecipeLazyQuery();
   const bookmarkCtx = useContext(BookmarkContext);
   const params = useParams();
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     setRecipe(
@@ -194,15 +196,17 @@ function Recipe() {
                 <use xlinkHref={`${icons}#icon-user`}></use>
               </svg>
             </div>
-            <button className="btn--round" onClick={bookmarkHandler}>
-              <svg className="">
-                <use
-                  xlinkHref={`${icons}#icon-bookmark${
-                    recipe.isBookmarked ? '-fill' : ''
-                  }`}
-                ></use>
-              </svg>
-            </button>
+            {currentUser && (
+              <button className="btn--round" onClick={bookmarkHandler}>
+                <svg className="">
+                  <use
+                    xlinkHref={`${icons}#icon-bookmark${
+                      recipe.isBookmarked ? '-fill' : ''
+                    }`}
+                  ></use>
+                </svg>
+              </button>
+            )}
           </div>
           <div className="recipe__ingredients">
             <h2 className="heading--2">Recipe ingredients</h2>

@@ -1,7 +1,17 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useAddBookmarkMutation, useBookmarkedRecipesLazyQuery, useDeleteBookmarkMutation } from '../generated/graphql';
-import { getCachedUser } from '../utils/auth';
+import React, {
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  useAddBookmarkMutation,
+  useBookmarkedRecipesQuery,
+  useDeleteBookmarkMutation,
+} from '../generated/graphql';
 import { formatRecipe } from '../utils/recipe';
+import { AuthContext } from './AuthContext';
 import { RecipeListItem } from './SearchContext';
 
 interface BookmarkContext {
@@ -21,31 +31,32 @@ interface Props {
 }
 
 export const BookmarkContextProvider = ({ children }: Props) => {
-  const { token, id } = getCachedUser();
+  const { currentUser } = useContext(AuthContext);
   const [bookmarks, setBookmarks] = useState<RecipeListItem[]>([]);
-  const [getBookmarks] = useBookmarkedRecipesLazyQuery();
+  const { data: bookmardsData, refetch } = useBookmarkedRecipesQuery({
+    variables: { searchQuery: { _eq: currentUser?.id } },
+  });
   const [bookmarkMutaion] = useAddBookmarkMutation();
   const [unBookmarkMutaion] = useDeleteBookmarkMutation();
 
   const fetchBookmarks = useCallback(async () => {
     try {
-      if (!token) return;
+      if (!bookmardsData) return;
 
-      const { data } = await getBookmarks({
-        variables: { searchQuery: { _eq: id } },
-      });
-      setBookmarks(data!.recipes.map((d) => formatRecipe(d)));
-    } catch (e) {}
-  }, [token, getBookmarks, id]);
+      setBookmarks(bookmardsData!.recipes.map((d) => formatRecipe(d)));
+    } catch (e) {
+      console.log(e);
+    }
+  }, [bookmardsData]);
 
   const addBookmark = async (item: RecipeListItem) => {
     await bookmarkMutaion({ variables: { recipeId: item.id } });
-    await fetchBookmarks();
+    await refetch();
   };
 
   const removeBookmark = async (itemId: string) => {
     await unBookmarkMutaion({ variables: { recipeId: itemId } });
-    await fetchBookmarks();
+    await refetch();
   };
 
   useEffect(() => {
