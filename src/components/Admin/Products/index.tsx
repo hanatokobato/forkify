@@ -49,11 +49,11 @@ const Products = () => {
   }, [data]);
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'id', headerName: 'ID', flex: 1 },
     {
       field: 'product',
       headerName: 'PRODUCT',
-      width: 200,
+      flex: 1,
       renderCell: (params: any) => {
         return (
           <div className={classes.productListItem}>
@@ -67,22 +67,22 @@ const Products = () => {
         );
       },
     },
-    { field: 'quantity', headerName: 'REMAINING', width: 200 },
+    { field: 'quantity', headerName: 'REMAINING', flex: 1 },
     {
       field: 'status',
       headerName: 'STATUS',
-      width: 120,
+      flex: 1,
       valueGetter: () => 'ACTIVE',
     },
     {
       field: 'price',
       headerName: 'PRICE',
-      width: 160,
+      flex: 1,
     },
     {
       field: 'action',
       headerName: 'ACTIONS',
-      width: 150,
+      flex: 1,
       renderCell: (params: any) => {
         return (
           <>
@@ -124,7 +124,7 @@ const Products = () => {
           </Button>
         </Box>
       </Box>
-      <Box sx={{ height: 400, width: '100%', backgroundColor: '#fff' }}>
+      <Box sx={{ height: '90%', width: '100%', backgroundColor: '#fff' }}>
         <DataGrid rows={products} disableSelectionOnClick columns={columns} />
       </Box>
     </>

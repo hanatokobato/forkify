@@ -81,7 +81,7 @@ function App() {
         {currentUser?.type === ADMIN && (
           <Routes>
             <Route
-              path="/"
+              path="/*"
               element={
                 <ProtectedRoute>
                   <Admin />

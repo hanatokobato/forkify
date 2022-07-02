@@ -36,6 +36,14 @@
   align-items: center;
   border-radius: 10px;
   color: #f38e82;
+
+  &Collapse {
+    justify-content: space-between;
+  }
+
+  &Child {
+    padding-left: 3rem;
+  }
 }
 
 .sidebarListItem.active,

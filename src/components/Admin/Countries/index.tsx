@@ -29,18 +29,18 @@ const Countries = () => {
     {
       field: 'name',
       headerName: 'Name',
-      width: 200,
+      flex: 1,
     },
-    { field: 'abbreviation', headerName: 'Abbreviation', width: 200 },
+    { field: 'abbreviation', headerName: 'Abbreviation', flex: 1 },
     {
       field: 'active',
       headerName: 'Active',
-      width: 160,
+      flex: 1,
     },
     {
       field: 'action',
       headerName: 'Actions',
-      width: 150,
+      flex: 1,
       renderCell: (params: any) => {
         return (
           <>

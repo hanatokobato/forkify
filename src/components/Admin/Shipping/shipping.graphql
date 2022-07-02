@@ -1,0 +1,53 @@
+query getShippingZones {
+  shipping_zones {
+    id
+    name
+    countries_aggregate {
+      aggregate {
+        count
+      }
+    }
+    countries {
+      states_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
+
+mutation settingShippingZone(
+  $countryIds: [Int!]!
+  $name: String!
+  $shippingRates: [ShippingRateInput!]!
+) {
+  settingShippingZone(
+    input: {
+      countryIds: $countryIds
+      name: $name
+      shippingRates: $shippingRates
+    }
+  ) {
+    errors
+    shippingZone {
+      id
+    }
+  }
+}
+
+query getCountriesNonShippingZone {
+  countries(
+    where: { shipping_zone_id: { _is_null: true } }
+    order_by: { id: asc }
+  ) {
+    id
+    name
+  }
+}
+
+mutation deleteShippingZone($id: ID!) {
+  deleteShippingZone(input: { id: $id }) {
+    id
+  }
+}
