@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import icons from '../../images/icons.svg';
 import { To } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';

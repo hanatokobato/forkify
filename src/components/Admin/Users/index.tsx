@@ -1,20 +1,13 @@
-import { DeleteOutline, Add } from '@mui/icons-material';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import classes from './index.module.scss';
-import { useNavigate } from 'react-router-dom';
 import {
-  useGetProductsQuery,
-  Product as ProductType,
-  useDeleteProductMutation,
   useGetUsersQuery,
 } from '../../../generated/graphql';
-import { getDownloadUrl } from '../../../utils/uploadImage';
 
 const Users = () => {
-  const { data, loading, error, refetch } = useGetUsersQuery();
+  const { data } = useGetUsersQuery();
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },

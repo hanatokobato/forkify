@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { API_KEY } from '../../consts';
 import SearchContext, { RecipeListItem } from '../../context/SearchContext';
 import icons from '../../images/icons.svg';
 import Paginate from '../Paginate';

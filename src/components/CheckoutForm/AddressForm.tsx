@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   InputLabel,
   Select,
@@ -10,22 +10,31 @@ import {
 import { Form, Field } from 'react-final-form';
 import FormInput from './CustomTextField';
 import { Link } from 'react-router-dom';
-import { commerce } from '../../utils/commerce';
 import {
+  useGetCartQuery,
   useGetCheckoutCountriesLazyQuery,
   useGetCheckoutStatesLazyQuery,
+  useGetShippingOptionsLazyQuery,
 } from '../../generated/graphql';
+import { AuthContext } from '../../context/AuthContext';
 
 const AddressForm = ({ test }: any) => {
+  const { currentUser } = useContext(AuthContext);
+  const { data: cartData } = useGetCartQuery({
+    variables: { userId: currentUser!.id },
+  });
   const [shippingCountry, setShippingCountry] = useState('');
   const [shippingSubdivision, setShippingSubdivision] = useState('');
-  const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingOption, setShippingOption] = useState('');
   const [
     fetchContries,
     { data: countryData },
   ] = useGetCheckoutCountriesLazyQuery();
   const [fetchStates, { data: stateData }] = useGetCheckoutStatesLazyQuery();
+  const [
+    fetchShippingOptions,
+    { data: shipOptionData },
+  ] = useGetShippingOptionsLazyQuery();
 
   const submitFormHandler = (values: any) => {
     const params = {
@@ -37,52 +46,45 @@ const AddressForm = ({ test }: any) => {
     test(params);
   };
 
-  const fetchShippingCountries = () => {
-    fetchContries();
-  };
+  const fetchShippingCountries = useCallback(async () => {
+    const { data } = await fetchContries();
+    setShippingCountry(data?.countries[0]?.id);
+  }, [fetchContries]);
 
-  const fetchSubdivisions = (countryId: any) => {
-    fetchStates({ variables: { countryId: countryId } });
-  };
+  const fetchSubdivisions = useCallback(
+    async (countryId: any) => {
+      const { data } = await fetchStates({
+        variables: { countryId: countryId },
+      });
+      setShippingSubdivision(data?.states[0]?.id);
+    },
+    [fetchStates]
+  );
 
-  const fetchShippingOptions = async (
-    checkoutTokenId: any,
-    country: any,
-    stateProvince: any = null
-  ) => {
-    const options = await commerce.checkout.getShippingOptions(
-      checkoutTokenId,
-      { country, region: stateProvince }
-    );
+  const fetchOptions = useCallback(
+    async (cartId: number, countryId: number, stateId: number) => {
+      const { data } = await fetchShippingOptions({
+        variables: { cartId, countryId, stateId },
+      });
 
-    setShippingOptions(options);
-    setShippingOption(options[0].id);
-  };
+      setShippingOption(data?.shippingOptions[0]?.shippingRateId || '');
+    },
+    [fetchShippingOptions]
+  );
 
   useEffect(() => {
     fetchShippingCountries();
-  }, []);
-
-  useEffect(() => {
-    setShippingCountry(countryData?.countries[0]?.id);
-  }, [countryData]);
+  }, [fetchShippingCountries]);
 
   useEffect(() => {
     if (shippingCountry) fetchSubdivisions(shippingCountry);
-  }, [shippingCountry]);
+  }, [shippingCountry, fetchSubdivisions]);
 
   useEffect(() => {
-    setShippingSubdivision(stateData?.states[0]?.id);
-  }, [stateData]);
-
-  useEffect(() => {
-    // if (shippingSubdivision)
-    //   fetchShippingOptions(
-    //     checkoutToken.id,
-    //     shippingCountry,
-    //     shippingSubdivision
-    //   );
-  }, [shippingSubdivision]);
+    if (shippingCountry && cartData) {
+      fetchOptions(cartData.cart!.id, +shippingCountry, +shippingSubdivision);
+    }
+  }, [shippingSubdivision, shippingCountry, fetchOptions, cartData]);
 
   return (
     <>
@@ -114,7 +116,7 @@ const AddressForm = ({ test }: any) => {
                       {...rest}
                       fullWidth
                       required
-                      value={shippingCountry}
+                      value={shippingCountry?.toString() || ''}
                       onChange={(e) => setShippingCountry(e.target.value)}
                     >
                       {countryData?.countries.map((item) => (
@@ -136,7 +138,7 @@ const AddressForm = ({ test }: any) => {
                         {...rest}
                         fullWidth
                         required
-                        value={shippingSubdivision}
+                        value={shippingSubdivision?.toString() || ''}
                         onChange={(e) => setShippingSubdivision(e.target.value)}
                       >
                         {stateData?.states.map((item) => (
@@ -149,7 +151,7 @@ const AddressForm = ({ test }: any) => {
                   )}
                 </Field>
               ) : null}
-              {null && (
+              {shipOptionData?.shippingOptions && (
                 <Field name="shippingOption">
                   {({ input, ...rest }) => (
                     <Grid item xs={12} sm={6}>
@@ -159,13 +161,13 @@ const AddressForm = ({ test }: any) => {
                         {...rest}
                         fullWidth
                         required
-                        value={shippingOption}
+                        value={shippingOption.toString()}
                         onChange={(e) => setShippingOption(e.target.value)}
                       >
-                        {shippingOptions
+                        {shipOptionData.shippingOptions
                           .map((sO: any) => ({
-                            id: sO.id,
-                            label: `${sO.description} - (${sO.price.formatted_with_symbol})`,
+                            id: sO.shippingRateId,
+                            label: `${sO.description} - (${sO.price})`,
                           }))
                           .map((item) => (
                             <MenuItem key={item.id} value={item.id}>

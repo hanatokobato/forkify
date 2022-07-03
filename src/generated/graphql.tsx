@@ -166,6 +166,13 @@ export type SettingShippingZonePayload = {
   shippingZone?: Maybe<ShippingZone>;
 };
 
+export type ShippingOption = {
+  __typename?: 'ShippingOption';
+  description?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  shippingRateId: Scalars['ID'];
+};
+
 export type ShippingRateInput = {
   amount: Scalars['Float'];
   name: Scalars['String'];
@@ -1859,6 +1866,7 @@ export type Query_Root = {
   recipes_aggregate: Recipes_Aggregate;
   /** fetch data from the table: "recipes" using primary key columns */
   recipes_by_pk?: Maybe<Recipes>;
+  shippingOptions: Array<ShippingOption>;
   /** fetch data from the table: "shipping_rates" */
   shipping_rates: Array<Shipping_Rates>;
   /** fetch aggregated fields from the table: "shipping_rates" */
@@ -2008,6 +2016,13 @@ export type Query_RootRecipes_AggregateArgs = {
 
 export type Query_RootRecipes_By_PkArgs = {
   id: Scalars['bigint'];
+};
+
+
+export type Query_RootShippingOptionsArgs = {
+  cartId: Scalars['Int'];
+  countryId: Scalars['Int'];
+  stateId?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -4285,6 +4300,15 @@ export type GetCheckoutStatesQueryVariables = Exact<{
 
 export type GetCheckoutStatesQuery = { __typename?: 'query_root', states: Array<{ __typename?: 'states', id: any, name: string }> };
 
+export type GetShippingOptionsQueryVariables = Exact<{
+  cartId: Scalars['Int'];
+  countryId: Scalars['Int'];
+  stateId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetShippingOptionsQuery = { __typename?: 'query_root', shippingOptions: Array<{ __typename?: 'ShippingOption', price?: number | null, description?: string | null, shippingRateId: string }> };
+
 export type RecipeQueryVariables = Exact<{
   id: Scalars['bigint'];
 }>;
@@ -5156,6 +5180,45 @@ export function useGetCheckoutStatesLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetCheckoutStatesQueryHookResult = ReturnType<typeof useGetCheckoutStatesQuery>;
 export type GetCheckoutStatesLazyQueryHookResult = ReturnType<typeof useGetCheckoutStatesLazyQuery>;
 export type GetCheckoutStatesQueryResult = Apollo.QueryResult<GetCheckoutStatesQuery, GetCheckoutStatesQueryVariables>;
+export const GetShippingOptionsDocument = gql`
+    query getShippingOptions($cartId: Int!, $countryId: Int!, $stateId: Int) {
+  shippingOptions(cartId: $cartId, countryId: $countryId, stateId: $stateId) {
+    price
+    description
+    shippingRateId
+  }
+}
+    `;
+
+/**
+ * __useGetShippingOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetShippingOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetShippingOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetShippingOptionsQuery({
+ *   variables: {
+ *      cartId: // value for 'cartId'
+ *      countryId: // value for 'countryId'
+ *      stateId: // value for 'stateId'
+ *   },
+ * });
+ */
+export function useGetShippingOptionsQuery(baseOptions: Apollo.QueryHookOptions<GetShippingOptionsQuery, GetShippingOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetShippingOptionsQuery, GetShippingOptionsQueryVariables>(GetShippingOptionsDocument, options);
+      }
+export function useGetShippingOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetShippingOptionsQuery, GetShippingOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetShippingOptionsQuery, GetShippingOptionsQueryVariables>(GetShippingOptionsDocument, options);
+        }
+export type GetShippingOptionsQueryHookResult = ReturnType<typeof useGetShippingOptionsQuery>;
+export type GetShippingOptionsLazyQueryHookResult = ReturnType<typeof useGetShippingOptionsLazyQuery>;
+export type GetShippingOptionsQueryResult = Apollo.QueryResult<GetShippingOptionsQuery, GetShippingOptionsQueryVariables>;
 export const RecipeDocument = gql`
     query Recipe($id: bigint!) {
   recipes_by_pk(id: $id) {

@@ -12,3 +12,11 @@ query getCheckoutStates($countryId: Int!) {
     name
   }
 }
+
+query getShippingOptions($cartId: Int!, $countryId: Int!, $stateId: Int) {
+  shippingOptions(cartId: $cartId, countryId: $countryId, stateId: $stateId) {
+    price
+    description
+    shippingRateId
+  }
+}

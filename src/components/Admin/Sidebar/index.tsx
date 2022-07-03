@@ -8,7 +8,7 @@ import {
   KeyboardArrowUp,
 } from '@mui/icons-material';
 import { Box, Collapse } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import classes from './index.module.scss';
 

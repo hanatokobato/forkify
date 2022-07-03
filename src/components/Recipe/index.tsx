@@ -60,7 +60,7 @@ function Recipe() {
     };
 
     fetchRecipe({ variables: { id: params.id } }).then(formatRecipe);
-  }, [fetchRecipe, params.id]);
+  }, [fetchRecipe, params.id, bookmarkCtx.bookmarks]);
 
   const updateServingsHandler = (newValue: number) => {
     newValue > 0 &&

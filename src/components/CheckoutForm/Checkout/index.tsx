@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   CssBaseline,
   Paper,
@@ -11,11 +11,10 @@ import {
   Button,
   styled,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
-import { commerce } from '../../../utils/commerce';
 
 const PREFIX = 'Checkout';
 
@@ -83,31 +82,11 @@ const Root = styled('main')(({ theme }) => ({
 const steps = ['Shipping address', 'Payment details'];
 
 const Checkout = ({ cart, onCaptureCheckout, order, error }: any) => {
-  const [checkoutToken, setCheckoutToken] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
-  const navigate = useNavigate();
 
   const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
   const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
-
-  useEffect(() => {
-    if (cart.id) {
-      const generateToken = async () => {
-        try {
-          const token = await commerce.checkout.generateToken(cart.id, {
-            type: 'cart',
-          });
-
-          setCheckoutToken(token);
-        } catch {
-          if (activeStep !== steps.length) navigate('/products');
-        }
-      };
-
-      generateToken();
-    }
-  }, [cart]);
 
   const test = (data: any) => {
     setShippingData(data);
@@ -153,10 +132,9 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }: any) => {
 
   const Form = () =>
     activeStep === 0 ? (
-      <AddressForm checkoutToken={checkoutToken} test={test} />
+      <AddressForm test={test} />
     ) : (
       <PaymentForm
-        checkoutToken={checkoutToken}
         nextStep={nextStep}
         backStep={backStep}
         shippingData={shippingData}

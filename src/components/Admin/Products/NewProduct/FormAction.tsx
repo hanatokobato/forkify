@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   Box,
   Button,
@@ -9,24 +8,8 @@ import {
   FormControlLabel,
   FormGroup,
   Switch,
-  Typography,
 } from '@mui/material';
 import React from 'react';
-import TextField from '../../FormInput/TextField';
-import UploadImages from '../../FormInput/UploadImages';
-
-const PREFIX = 'FormAction';
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
-const classes = {
-  inputWrapper: `${PREFIX}-inputWrapper`,
-};
-
-const InputWrapper = styled(Box)(({ theme }) => ({
-  [`&.${classes.inputWrapper}`]: {
-    marginBottom: '1rem',
-  },
-}));
 
 const FormAction = () => {
   return (

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Header from './components/Header';
 import { Routes, Route, useNavigate, To } from 'react-router-dom';
 import { SearchContextProvider } from './context/SearchContext';
@@ -7,8 +7,7 @@ import NewRecipe from './components/NewRecipe';
 import ProtectedRoute from './components/ProtectedRoute';
 import Products from './components/Products';
 import Recipes from './components/Recipes';
-import Cart, { Cart as CartType } from './components/Cart';
-import { commerce } from './utils/commerce';
+import Cart from './components/Cart';
 import Checkout from './components/CheckoutForm/Checkout';
 import { createTheme, ThemeProvider } from '@mui/material';
 import Admin from './components/Admin';
@@ -36,43 +35,12 @@ function App() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
-  const [cart, setCart] = useState<CartType>({
-    total_items: 0,
-    line_items: [],
-    subtotal: {
-      formatted_with_symbol: '',
-    },
-  });
-  const [order, setOrder] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
-
   const openNewRecipeHandler = () => {
     navigate('/recipes/new');
   };
 
   const closeNewRecipeHandler = (path: To) => {
     navigate(path);
-  };
-
-  const refreshCart = async () => {
-    const newCart = await commerce.cart.refresh();
-
-    setCart(newCart);
-  };
-
-  const handleCaptureCheckout = async (checkoutTokenId: any, newOrder: any) => {
-    try {
-      const incomingOrder = await commerce.checkout.capture(
-        checkoutTokenId,
-        newOrder
-      );
-
-      setOrder(incomingOrder);
-
-      refreshCart();
-    } catch (error: any) {
-      setErrorMessage(error.data.error.message);
-    }
   };
 
   return (
@@ -134,12 +102,7 @@ function App() {
                     path="/checkout"
                     element={
                       <ProtectedRoute>
-                        <Checkout
-                          cart={cart}
-                          order={order}
-                          onCaptureCheckout={handleCaptureCheckout}
-                          error={errorMessage}
-                        />
+                        <Checkout />
                       </ProtectedRoute>
                     }
                   />

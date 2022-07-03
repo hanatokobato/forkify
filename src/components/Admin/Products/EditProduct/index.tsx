@@ -8,7 +8,6 @@ import FormDetail from '../NewProduct/FormDetail';
 import Navigation from '../NewProduct/Navigation';
 import { FormData } from '../NewProduct';
 import {
-  UpdateProductInput,
   useGetProductLazyQuery,
   useGetProductsQuery,
   useUpdateProductMutation,
@@ -26,7 +25,7 @@ const EditProduct = () => {
   const [getProduct, { data }] = useGetProductLazyQuery();
   const [
     updateProductMutation,
-    { data: dataUpdated, loading, error },
+    { data: dataUpdated },
   ] = useUpdateProductMutation();
   const { refetch } = useGetProductsQuery();
   console.log(dataUpdated);
@@ -47,7 +46,7 @@ const EditProduct = () => {
       await refetch();
       navigate('/admin/products');
     },
-    [formData]
+    [formData, navigate, refetch, updateProductMutation]
   );
 
   const fileChangeHandler = (files: any) => {
@@ -57,7 +56,7 @@ const EditProduct = () => {
   useEffect(() => {
     const productId = params.id;
     if (productId) getProduct({ variables: { productId: productId } });
-  }, []);
+  }, [getProduct, params.id]);
 
   return (
     <div>

@@ -35,7 +35,7 @@ const Shipping = () => {
             query: GetShippingZonesDocument,
             data: {
               shipping_zones: cachedData?.shipping_zones?.filter(
-                (sz: any) => sz.id != data?.deleteShippingZone?.id
+                (sz: any) => sz.id !== data?.deleteShippingZone?.id
               ),
             },
           });
@@ -45,7 +45,7 @@ const Shipping = () => {
     } catch (e) {
       throw e;
     }
-  }, []);
+  }, [deleteZone, refetchContries]);
 
   const toggleDrawer = (open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent

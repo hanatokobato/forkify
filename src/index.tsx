@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
-import { Auth0Provider } from '@auth0/auth0-react';
 import { AuthContextProvider } from './context/AuthContext';
 import ApolloWrapper from './components/ApolloWrapper';
 import { Provider } from 'react-redux';
