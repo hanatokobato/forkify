@@ -1,8 +1,5 @@
 import {
   AccountCircle,
-  Language,
-  NotificationsNone,
-  Settings,
 } from '@mui/icons-material';
 import React from 'react';
 import classes from './index.module.scss';
@@ -28,7 +25,7 @@ const Topbar = () => {
         <div className={classes.topLeft}>
           <img
             src={logo}
-            alt="commerce.js"
+            alt="forkify"
             height="25px"
             className={classes.image}
           />

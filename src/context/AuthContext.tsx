@@ -70,7 +70,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     };
 
     initialize();
-  }, [user]);
+  }, [user, getAccessTokenSilently]);
 
   return (
     <AuthContext.Provider value={{ currentUser: currentUser }}>

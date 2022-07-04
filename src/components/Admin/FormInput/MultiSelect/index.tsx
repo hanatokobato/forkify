@@ -9,7 +9,7 @@ const MenuProps = {
   },
 };
 
-export default ({
+const MultiSelect = ({
   input: { value, name, onChange, ...restInput },
   meta,
   ...rest
@@ -31,3 +31,5 @@ export default ({
     />
   </FormControl>
 );
+
+export default MultiSelect;

@@ -8,7 +8,6 @@ type Props = TextFieldProps & {
 };
 
 function AdminTextField({ name, label, required, ...props }: Props) {
-  const isError = false;
   const requiredValidator = (value: any) =>
     !required || value ? undefined : 'Required';
 

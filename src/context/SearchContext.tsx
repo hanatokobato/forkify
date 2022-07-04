@@ -30,7 +30,7 @@ export const SearchContextProvider = ({ children }: Props) => {
   const [recipeList, setRecipeList] = useState<RecipeListItem[]>([]);
   const [
     getRecipes,
-    { loading: isLoading, error, data },
+    { loading: isLoading, error },
   ] = useSearchedRecipesLazyQuery();
 
   const fetchRecipes = useCallback(

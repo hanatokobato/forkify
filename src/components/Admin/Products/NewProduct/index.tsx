@@ -1,15 +1,5 @@
 import { ArrowBack } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  Container,
-  Link,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Link, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import React, { useCallback, useState } from 'react';
 import classes from './index.module.scss';
@@ -35,11 +25,7 @@ const NewProduct = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const { refetch } = useGetProductsQuery();
-  const [
-    createProductMutation,
-    { data, loading, error },
-  ] = useCreateProductMutation();
-  console.log(data);
+  const [createProductMutation] = useCreateProductMutation();
 
   const fileChangeHandler = (files: any) => {
     setFormData((data) => ({ ...data, images: files }));
@@ -60,7 +46,7 @@ const NewProduct = () => {
       await refetch();
       navigate('/admin/products');
     },
-    [formData]
+    [formData, createProductMutation, navigate, refetch]
   );
 
   return (

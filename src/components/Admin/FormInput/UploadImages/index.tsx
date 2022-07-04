@@ -1,10 +1,7 @@
 import {
   Box,
   Button,
-  LinearProgress,
   ListItem,
-  styled,
-  Typography,
 } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
@@ -19,14 +16,12 @@ interface Props {
 }
 
 const UploadImages = ({ onFileChange, imageInfos }: Props) => {
-  const [currentFile, setCurrentFile] = useState<Image>();
   const [previewImage, setPreviewImage] = useState<string>();
 
   const selectFile = useCallback((e: any) => {
-    setCurrentFile(e.target.files[0]);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
     onFileChange([e.target.files[0]]);
-  }, []);
+  }, [onFileChange]);
 
   return (
     <div className="mg20">

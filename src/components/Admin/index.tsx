@@ -18,7 +18,7 @@ const Admin = () => {
     if (location.pathname === '/') {
       navigate('/admin');
     }
-  }, []);
+  }, [location.pathname, navigate]);
 
   return (
     <>

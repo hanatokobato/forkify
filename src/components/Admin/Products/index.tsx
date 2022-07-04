@@ -1,5 +1,5 @@
 import { DeleteOutline, Add } from '@mui/icons-material';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,7 @@ interface FormattedProduct extends ProductType {
 }
 
 const Products = () => {
-  const { data, loading, error, refetch } = useGetProductsQuery();
+  const { data, refetch } = useGetProductsQuery();
   const [deleteProductMutation] = useDeleteProductMutation();
   const [products, setProducts] = useState<FormattedProduct[]>([]);
   const navigate = useNavigate();

@@ -44,7 +44,7 @@ const NewShipping = ({ cancelHandler }: any) => {
     } catch (e) {
       throw e;
     }
-  }, []);
+  }, [addShippingZone, refetchCountries, refetchZones]);
 
   return (
     <Box
@@ -159,7 +159,7 @@ const NewShipping = ({ cancelHandler }: any) => {
                               key={value}
                               label={
                                 (countryData?.countries || []).find(
-                                  (c) => c.id == value
+                                  (c) => c.id === value
                                 )?.name
                               }
                               className="multi-select-chip"
