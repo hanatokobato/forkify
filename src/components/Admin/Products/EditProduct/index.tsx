@@ -28,7 +28,6 @@ const EditProduct = () => {
     { data: dataUpdated },
   ] = useUpdateProductMutation();
   const { refetch } = useGetProductsQuery();
-  console.log(dataUpdated);
 
   const submitFormHandler = useCallback(
     async (values: any) => {
@@ -41,7 +40,6 @@ const EditProduct = () => {
         price: +values.price,
         quantity: +values.quantity,
       };
-      console.log(productInput);
       await updateProductMutation({ variables: { productInput } });
       await refetch();
       navigate('/admin/products');

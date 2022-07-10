@@ -45,24 +45,10 @@ const Navigation = () => {
               <ListItemText>Shipping options</ListItemText>
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText>Digital delivery</ListItemText>
-            </ListItemButton>
-          </ListItem>
+
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemText>Extra fields</ListItemText>
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText>SEO</ListItemText>
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText>Misc</ListItemText>
             </ListItemButton>
           </ListItem>
         </List>

@@ -113,7 +113,7 @@ const NewShipping = ({ cancelHandler }: any) => {
                             sx={{
                               display: 'flex',
                               marginBottom: '1.6rem',
-                              alignItems: 'center',
+                              alignItems: 'flex-start',
                             }}
                             key={name}
                           >
@@ -126,6 +126,7 @@ const NewShipping = ({ cancelHandler }: any) => {
                             </Box>
                             <Box sx={{ flex: 1 }}>
                               <TextField
+                                required
                                 name={`${name}.amount`}
                                 label="Amount"
                                 type="number"
@@ -136,7 +137,7 @@ const NewShipping = ({ cancelHandler }: any) => {
                               />
                             </Box>
                             <DeleteOutline
-                              sx={{ cursor: 'pointer' }}
+                              sx={{ cursor: 'pointer', alignSelf: 'center' }}
                               onClick={() => fields.remove(index)}
                             />
                           </Box>

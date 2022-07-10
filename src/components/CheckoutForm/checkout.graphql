@@ -20,3 +20,64 @@ query getShippingOptions($cartId: Int!, $countryId: Int!, $stateId: Int) {
     shippingRateId
   }
 }
+
+query getAddresses {
+  addresses {
+    address1
+    address_type
+    city
+    country_id
+    first_name
+    id
+    is_billing_default
+    is_default
+    last_name
+    state_id
+    zip_code
+    state {
+      abbreviation
+      name
+      id
+    }
+  }
+}
+
+mutation createOrder($cartId: Int!) {
+  createOrder(input: { cartId: $cartId }) {
+    order {
+      id
+      number
+    }
+  }
+}
+
+mutation createAddress(
+  $address1: String!
+  $city: String!
+  $countryId: Int!
+  $firstName: String!
+  $lastName: String!
+  $orderId: Int
+  $shoppingAddressId: Int
+  $stateId: Int!
+  $zipCode: String!
+) {
+  createAddress(
+    input: {
+      address1: $address1
+      countryId: $countryId
+      default: false
+      firstName: $firstName
+      lastName: $lastName
+      orderId: $orderId
+      shoppingAddressId: $shoppingAddressId
+      stateId: $stateId
+      zipCode: $zipCode
+      city: $city
+    }
+  ) {
+    address {
+      id
+    }
+  }
+}

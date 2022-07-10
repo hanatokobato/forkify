@@ -9,7 +9,7 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import { ShoppingCart } from '@mui/icons-material';
+import { ShoppingCart, Storefront } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import Search from '../Search';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -118,6 +118,15 @@ const Header = ({
             {!isAuthenticated && <LoginButton className="nav__btn" />}
             {isAuthenticated && (
               <>
+                <IconButton
+                  component={Link}
+                  to="/products"
+                  aria-label="Shopping"
+                  color="inherit"
+                  size="medium"
+                >
+                  <Storefront fontSize="medium" color="primary" />
+                </IconButton>
                 <IconButton
                   component={Link}
                   to="/cart"
