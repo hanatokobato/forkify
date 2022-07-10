@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   CssBaseline,
   Paper,
@@ -12,9 +12,15 @@ import {
   styled,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
+import {
+  useCreateAddressMutation,
+  useCreateOrderMutation,
+  useGetCartQuery,
+} from '../../../generated/graphql';
+import { AuthContext } from '../../../context/AuthContext';
+import { FormData as AddressFormData } from '../AddressForm';
 
 const PREFIX = 'Checkout';
 
@@ -82,17 +88,49 @@ const Root = styled('main')(({ theme }) => ({
 const steps = ['Shipping address', 'Payment details'];
 
 const Checkout = ({ cart, onCaptureCheckout, order, error }: any) => {
+  const { currentUser } = useContext(AuthContext);
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
+  const { data: cartData } = useGetCartQuery({
+    variables: { userId: currentUser!.id },
+  });
+  const [createOrder] = useCreateOrderMutation();
+  const [createAddress] = useCreateAddressMutation();
 
   const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
   const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
 
-  const test = (data: any) => {
+  const test = (data: AddressFormData) => {
     setShippingData(data);
+    const {
+      address1,
+      city,
+      firstName,
+      lastName,
+      shippingCountry: countryId,
+      shippingSubdivision: stateId,
+      zip: zipCode,
+    } = data;
+    createAddress({
+      variables: {
+        address1,
+        city,
+        firstName,
+        lastName,
+        countryId,
+        stateId,
+        zipCode,
+      },
+    });
 
     nextStep();
   };
+
+  useEffect(() => {
+    if (cartData?.cart?.id) {
+      createOrder({ variables: { cartId: cartData.cart.id } });
+    }
+  }, [cartData, createOrder]);
 
   let Confirmation = () =>
     order.customer ? (

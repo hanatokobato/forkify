@@ -115,10 +115,7 @@ export default function HeaderMenu({ openNewRecipeHandler }: any) {
             </ListItemText>
           </StyledMenuItem>
         </HtmlTooltip>
-        <StyledMenuItem
-          onClick={logout}
-          className={classes.menuItem}
-        >
+        <StyledMenuItem onClick={logout} className={classes.menuItem}>
           <ListItemIcon>
             <Logout fontSize="medium" color="primary" />
           </ListItemIcon>
