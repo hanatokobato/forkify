@@ -25,6 +25,7 @@ import {
 import { AuthContext } from '../../context/AuthContext';
 
 export interface FormData {
+  addressId: number;
   address1: string;
   city: string;
   email: string;
@@ -57,12 +58,18 @@ const AddressForm = ({ test }: any) => {
   const [selectedAddress, setSelectedAddress] = useState<number>();
 
   const submitFormHandler = (values: any) => {
-    const params = {
-      ...values,
-      shippingCountry,
-      shippingSubdivision,
-      shippingOption,
-    };
+    let params;
+    if (selectedAddress) {
+      params = { addressId: selectedAddress }
+    } else {
+      params = {
+        ...values,
+        shippingCountry,
+        shippingSubdivision,
+        shippingOption,
+      };
+
+    }
     test(params);
   };
 
@@ -150,7 +157,7 @@ const AddressForm = ({ test }: any) => {
             <Button component={Link} variant="outlined" to="/cart">
               Back to Cart
             </Button>
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={submitFormHandler}>
               Next
             </Button>
           </div>

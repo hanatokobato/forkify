@@ -18,6 +18,7 @@ import {
   useCreateAddressMutation,
   useCreateOrderMutation,
   useGetCartQuery,
+  useUpdateOrderMutation,
 } from '../../../generated/graphql';
 import { AuthContext } from '../../../context/AuthContext';
 import { FormData as AddressFormData } from '../AddressForm';
@@ -94,36 +95,42 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }: any) => {
   const { data: cartData } = useGetCartQuery({
     variables: { userId: currentUser!.id },
   });
-  const [createOrder] = useCreateOrderMutation();
+  const [createOrder, {data: orderData}] = useCreateOrderMutation();
   const [createAddress] = useCreateAddressMutation();
+  const [updateOrder] = useUpdateOrderMutation();
 
   const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
   const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
 
-  const test = (data: AddressFormData) => {
-    setShippingData(data);
-    const {
-      address1,
-      city,
-      firstName,
-      lastName,
-      shippingCountry: countryId,
-      shippingSubdivision: stateId,
-      zip: zipCode,
-    } = data;
-    createAddress({
-      variables: {
-        address1,
-        city,
-        firstName,
-        lastName,
-        countryId,
-        stateId,
-        zipCode,
-      },
-    });
+  const test = async (data: AddressFormData) => {
+    if (!orderData?.createOrder?.order?.id) return;
+    console.log(data)
+    console.log(orderData)
+    const addressId = data?.addressId;
+    // setShippingData(data);
+    // const {
+    //   address1,
+    //   city,
+    //   firstName,
+    //   lastName,
+    //   shippingCountry: countryId,
+    //   shippingSubdivision: stateId,
+    //   zip: zipCode,
+    // } = data;
+    // const a = await createAddress({
+    //   variables: {
+    //     address1,
+    //     city,
+    //     firstName,
+    //     lastName,
+    //     countryId,
+    //     stateId,
+    //     zipCode,
+    //   },
+    // });
+    updateOrder({variables: {orderId: +orderData.createOrder.order.id, shipAddressId: addressId}})
 
-    nextStep();
+    // nextStep();
   };
 
   useEffect(() => {
