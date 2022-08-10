@@ -81,3 +81,11 @@ mutation createAddress(
     }
   }
 }
+
+mutation updateOrder($orderId: Int!, $shipAddressId: Int, $billAddressId: Int) {
+  updateOrder(input: {orderId: $orderId, shipAddressId: $shipAddressId, billAddressId: $billAddressId}) {
+    order {
+      id
+    }
+  }
+}
